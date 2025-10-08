@@ -1,5 +1,8 @@
 'use client';
 
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// Tente primeiro a variante ESM (deve existir na 15.6.6)
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { appConfig } from '@/config/app.config';
@@ -7,8 +10,7 @@ import HeroInput from '@/components/HeroInput';
 import SidebarInput from '@/components/app/generation/SidebarInput';
 import HeaderBrandKit from '@/components/shared/header/BrandKit/BrandKit';
 import { HeaderProvider } from '@/components/shared/header/HeaderContext';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 // Import icons from centralized module to avoid Turbopack chunk issues
 import { 
   FiFile, 

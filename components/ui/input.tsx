@@ -1,24 +1,53 @@
-import * as React from "react"
+"use client";
 
-import { cn } from "@/lib/utils"
+import React from 'react';
+import { cn } from '@/lib/utils/cn';
+import { useInputMask } from '@/hooks/useInputMask';
 
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement>
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  error?: string;
+  mask?: 'cpf' | 'cep' | 'placa' | 'telefone' | 'email';
+  required?: boolean;
+  loading?: boolean;
+}
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        className={cn(
-          "flex h-10 w-full rounded-[10px] border border-zinc-300 bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [box-shadow:inset_0px_-2px_0px_0px_#e4e4e7,_0px_1px_6px_0px_rgba(228,_228,_231,_30%)] hover:[box-shadow:inset_0px_-2px_0px_0px_#d4d4d8,_0px_1px_6px_0px_rgba(212,_212,_216,_40%)] focus-visible:[box-shadow:inset_0px_-2px_0px_0px_#f97316,_0px_1px_6px_0px_rgba(249,_115,_22,_30%)] transition-all duration-200",
-          className
+export function Input({ 
+  label, 
+  error, 
+  mask, 
+  required, 
+  loading, 
+  className, 
+  ...props 
+}: InputProps) {
+  const inputRef = useInputMask(mask);
+
+  return (
+    <div className="space-y-1">
+      <label className="block text-sm font-medium text-gray-700">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          className={cn(
+            "w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors",
+            error ? "border-red-500" : "border-gray-300 hover:border-gray-400",
+            loading && "opacity-50 cursor-not-allowed",
+            className
+          )}
+          disabled={loading}
+          {...props}
+        />
+        {loading && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-brand-primary"></div>
+          </div>
         )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Input.displayName = "Input"
-
-export { Input }
+      </div>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+    </div>
+  );
+}

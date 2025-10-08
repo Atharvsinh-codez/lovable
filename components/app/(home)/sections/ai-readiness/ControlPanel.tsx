@@ -54,7 +54,7 @@ export default function ControlPanel({
   analysisData,
   onReset,
 }: ControlPanelProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const [showAIAnalysis, setShowAIAnalysis] = useState(false); // Reserved for AI analysis feature
   const [aiInsights, setAiInsights] = useState<CheckItem[]>([]);
   const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
@@ -299,8 +299,8 @@ export default function ControlPanel({
 
       return () => clearInterval(checkInterval);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAnalyzing, showResults, analysisData]);
+
+  }, [isAnalyzing, showResults, analysisData, checks, overallScore]);
 
   useEffect(() => {
     if (currentCheckIndex >= 0 && currentCheckIndex < checks.length && isAnalyzing) {
@@ -344,7 +344,7 @@ export default function ControlPanel({
   };
 
   // Utility function available but not used in current render
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-accent-black";
     if (score >= 60) return "text-accent-black";

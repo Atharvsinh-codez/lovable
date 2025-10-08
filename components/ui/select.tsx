@@ -1,25 +1,65 @@
-import * as React from "react"
+"use client";
 
-import { cn } from "@/lib/utils"
+import React from 'react';
+import { cn } from '@/lib/utils/cn';
 
-export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  label: string;
+  error?: string;
+  required?: boolean;
+  loading?: boolean;
+  options: { value: string; label: string }[];
+  placeholder?: string;
+}
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <select
-        className={cn(
-          "flex h-10 w-full rounded-[10px] border border-zinc-300 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [box-shadow:inset_0px_-2px_0px_0px_#e4e4e7,_0px_1px_6px_0px_rgba(228,_228,_231,_30%)] hover:[box-shadow:inset_0px_-2px_0px_0px_#d4d4d8,_0px_1px_6px_0px_rgba(212,_212,_216,_40%)] focus-visible:[box-shadow:inset_0px_-2px_0px_0px_#f97316,_0px_1px_6px_0px_rgba(249,_115,_22,_30%)] transition-all duration-200",
-          className
+export function Select({ 
+  label, 
+  error, 
+  required, 
+  loading, 
+  options, 
+  placeholder = "Selecione uma opção",
+  className, 
+  ...props 
+}: SelectProps) {
+  return (
+    <div className="space-y-1">
+      <label className="block text-sm font-medium text-gray-700">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        <select
+          className={cn(
+            "w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors appearance-none bg-white",
+            error ? "border-red-500" : "border-gray-300 hover:border-gray-400",
+            loading && "opacity-50 cursor-not-allowed",
+            className
+          )}
+          disabled={loading || props.disabled}
+          {...props}
+        >
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        {loading && (
+          <div className="absolute right-8 top-1/2 transform -translate-y-1/2">
+            <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-brand-primary"></div>
+          </div>
         )}
-        ref={ref}
-        {...props}
-      >
-        {children}
-      </select>
-    )
-  }
-)
-Select.displayName = "Select"
-
-export { Select }
+      </div>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+    </div>
+  );
+}
