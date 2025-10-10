@@ -5,7 +5,7 @@ export const appConfig = {
   // Vercel Sandbox Configuration
   vercelSandbox: {
     // Sandbox timeout in minutes
-    timeoutMinutes: 15,
+    timeoutMinutes: 30,
 
     // Convert to milliseconds for Vercel Sandbox API
     get timeoutMs() {
@@ -50,8 +50,8 @@ export const appConfig = {
   
   // AI Model Configuration
   ai: {
-    // Default AI model
-    defaultModel: 'moonshotai/kimi-k2-instruct-0905',
+    // Default AI model (using Claude Code CLI subscription mode)
+    defaultModel: 'anthropic/claude-sonnet-4-20250514',
     
     // Available models
     availableModels: [
