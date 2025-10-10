@@ -68,7 +68,7 @@ class ClaudeCodeAdapter:
                 "configured": True,
                 "mode": "CLI",
                 "models": [
-                    "claude-sonnet-4-20250514",
+                    "claude-sonnet-4-5-20250929",
                     "claude-opus-4-1-20250805",
                 ],
             }
@@ -86,7 +86,7 @@ class ClaudeCodeAdapter:
     async def execute_streaming(
         self,
         prompt: str,
-        model: str = "claude-sonnet-4-20250514",
+        model: str = "claude-sonnet-4-5-20250929",
         session_id: Optional[str] = None,
         system_prompt: Optional[str] = None,
         project_path: Optional[str] = None,

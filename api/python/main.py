@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 # Define request models
 class GenerateRequest(BaseModel):
     prompt: str
-    model: str = "claude-sonnet-4-20250514"
+    model: str = "claude-sonnet-4-5-20250929"
     session_id: Optional[str] = None
     system_prompt: Optional[str] = None
     is_edit: bool = False

@@ -35,7 +35,7 @@ export default function SidebarInput({ onSubmit, disabled = false }: SidebarInpu
   ];
 
   const models = [
-    { id: "anthropic/claude-sonnet-4-20250514", name: "Sonnet 4 (Claude Code CLI)" },
+    { id: "anthropic/claude-sonnet-4-5-20250929", name: "Sonnet 4.5 (Claude Code CLI)" },
     { id: "moonshotai/kimi-k2-instruct-0905", name: "Kimi K2 0905 on Groq" },
     { id: "openai/gpt-5", name: "GPT-5" },
     { id: "google/gemini-2.0-flash-exp", name: "Gemini 2.0" },

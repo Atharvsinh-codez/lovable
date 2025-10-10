@@ -10,7 +10,7 @@ async def test_claude_sdk():
 
     options = ClaudeCodeOptions(
         system_prompt="You are a helpful assistant.",
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5-20250929",
         continue_conversation=True,
         permission_mode="bypassPermissions",
     )

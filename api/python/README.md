@@ -77,7 +77,7 @@ Content-Type: application/json
 
 {
   "prompt": "Create a React button component",
-  "model": "claude-sonnet-4-20250514",
+  "model": "claude-sonnet-4-5-20250929",
   "session_id": "optional-session-id",
   "system_prompt": "You are an expert React developer",
   "is_edit": false
