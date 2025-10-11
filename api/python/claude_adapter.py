@@ -119,12 +119,14 @@ class ClaudeCodeAdapter:
         ]
 
         # Configure Claude Code options
+        # Use continue_conversation=False for fresh sessions - this ensures Claude
+        # acts as a tool executor rather than a conversational assistant
         options = ClaudeCodeOptions(
             system_prompt=system_prompt or "You are an expert React developer.",
             model=model,
             allowed_tools=allowed_tools,  # Explicitly allow tools
             permission_mode="bypassPermissions",
-            continue_conversation=True,
+            continue_conversation=False,  # Fresh session each time for tool-first behavior
         )
 
         logger.info(f"Allowed tools: {allowed_tools}")
@@ -146,6 +148,26 @@ class ClaudeCodeAdapter:
             default_project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
             logger.info(f"Using default project path: {default_project_path}")
             os.chdir(default_project_path)
+
+        # Clean src directory for fresh generation (avoid Claude reading existing files)
+        # This ensures Claude starts from scratch instead of checking/updating existing files
+        import shutil
+        src_path = os.path.join(os.getcwd(), "src")
+        if os.path.exists(src_path):
+            # Remove components directory
+            components_path = os.path.join(src_path, "components")
+            if os.path.exists(components_path):
+                logger.info(f"Cleaning components directory: {components_path}")
+                shutil.rmtree(components_path)
+                os.makedirs(components_path)
+
+            # Remove App.jsx if it exists (will be regenerated)
+            app_path = os.path.join(src_path, "App.jsx")
+            if os.path.exists(app_path):
+                logger.info(f"Removing existing App.jsx")
+                os.remove(app_path)
+
+            logger.info("Source directory cleaned for fresh generation")
 
         try:
             async with ClaudeSDKClient(options=options) as client:

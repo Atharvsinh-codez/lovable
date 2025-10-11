@@ -148,7 +148,7 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
             model: model.replace('anthropic/', ''), // Remove provider prefix
             session_id: context?.sandboxId,
             is_edit: isEdit,
-            system_prompt: systemPrompt, // ← 添加系統提示
+            system_prompt: systemPrompt, // Add system prompt
           }),
         });
 
@@ -211,7 +211,7 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
                         // Frontend expects "status" messages
                         frontendMsg = {
                           type: 'status',
-                          message: pythonMsg.content || 'Claude Code SDK 初始化完成'
+                          message: pythonMsg.content || 'Claude Code SDK initialized'
                         };
                         break;
 
@@ -243,16 +243,16 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
                           let statusMessage = '';
                           switch (pythonMsg.tool_name) {
                             case 'Write':
-                              statusMessage = `創建文件：${pythonMsg.parameters?.file_path || ''}`;
+                              statusMessage = `Creating file: ${pythonMsg.parameters?.file_path || ''}`;
                               break;
                             case 'Edit':
-                              statusMessage = `編輯文件：${pythonMsg.parameters?.file_path || ''}`;
+                              statusMessage = `Editing file: ${pythonMsg.parameters?.file_path || ''}`;
                               break;
                             case 'Read':
-                              statusMessage = `讀取文件：${pythonMsg.parameters?.file_path || ''}`;
+                              statusMessage = `Reading file: ${pythonMsg.parameters?.file_path || ''}`;
                               break;
                             default:
-                              statusMessage = `執行工具：${pythonMsg.tool_name}`;
+                              statusMessage = `Executing tool: ${pythonMsg.tool_name}`;
                           }
 
                           frontendMsg = {
@@ -310,7 +310,7 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
                         frontendMsg = {
                           type: 'complete',
                           generatedCode: generatedCode,
-                          explanation: pythonMsg.explanation || '程式碼生成完成！',
+                          explanation: pythonMsg.explanation || 'Code generation completed!',
                           files: filesGenerated.length,
                           components: componentCount
                         };
@@ -369,7 +369,7 @@ START NOW - Write src/index.css first, then App.jsx, then components. NO explana
                     const frontendMsg = {
                       type: 'complete',
                       generatedCode: generatedCode,
-                      explanation: pythonMsg.explanation || '程式碼生成完成！',
+                      explanation: pythonMsg.explanation || 'Code generation completed!',
                       files: filesGenerated.length,
                       components: componentCount
                     };
