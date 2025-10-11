@@ -60,7 +60,39 @@ VERCEL_OIDC_TOKEN=auto_generated_by_vercel_env_pull
 pnpm dev  # or npm run dev / yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+---
+
+## Windows Setup Notes 🪟
+
+If you’re on Windows and see an error like:
+
+```
+Error: Cannot find module '../lightningcss.win32-x64-msvc.node'
+```
+
+This happens because the LightningCSS binary for Windows may not install correctly.
+
+**How to Fix:**
+
+```powershell
+# PowerShell
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+npm cache clean --force
+npm install lightningcss@latest --platform=win32 --arch=x64
+npm install
+npm rebuild lightningcss --force
+```
+
+After running these, try:
+
+```bash
+npm run dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000)
+
+---
 
 ## License
 
