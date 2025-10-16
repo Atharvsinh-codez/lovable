@@ -57,7 +57,7 @@ VERCEL_OIDC_TOKEN=auto_generated_by_vercel_env_pull
 
 3. **Run**
 ```bash
-pnpm dev  # or npm run dev / yarn dev
+npm dev  # or npm run dev / yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
