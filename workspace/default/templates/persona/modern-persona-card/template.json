@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "id": "modern-persona-card",
+    "name": "Modern Persona Card",
+    "description": "A clean, modern persona card with demographics, goals, pain points, and behaviors. Includes confidence scores and citation support.",
+    "artifactType": "persona",
+    "version": "1.0.0",
+    "author": "System",
+    "createdAt": "2025-10-28T00:00:00Z",
+    "updatedAt": "2025-10-28T00:00:00Z",
+    "tags": ["default", "persona", "card"]
+  },
+  "schema": {
+    "version": "1.0",
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "description": "Persona name",
+        "required": true
+      },
+      {
+        "name": "tagline",
+        "type": "string",
+        "description": "One-line summary",
+        "required": true
+      },
+      {
+        "name": "demographics",
+        "type": "object",
+        "description": "Demographic info",
+        "required": true,
+        "properties": [
+          { "name": "ageRange", "type": "string", "description": "Age range" },
+          { "name": "occupation", "type": "string", "description": "Job title" },
+          { "name": "techSavviness", "type": "string", "description": "Tech level" }
+        ]
+      },
+      {
+        "name": "goals",
+        "type": "array",
+        "description": "User goals",
+        "required": true,
+        "items": { "name": "goal", "type": "string", "description": "A goal" }
+      },
+      {
+        "name": "painPoints",
+        "type": "array",
+        "description": "Pain points",
+        "required": true,
+        "items": { "name": "painPoint", "type": "string", "description": "A pain point" }
+      },
+      {
+        "name": "behaviors",
+        "type": "array",
+        "description": "Behaviors",
+        "required": true,
+        "items": { "name": "behavior", "type": "string", "description": "A behavior" }
+      },
+      {
+        "name": "quote",
+        "type": "string",
+        "description": "Representative quote",
+        "required": false
+      }
+    ]
+  },
+  "rendererPath": "./PersonaRenderer.tsx"
+}

@@ -1,0 +1,69 @@
+=== Interview 01: Sarah, Freelance Designer ===
+Date: October 25, 2025
+Interviewer: What brings you to try new design tools?
+
+Sarah: I'm a freelance designer and I'm constantly juggling multiple projects. Time is my biggest enemy. I need tools that help me ship designs fast without sacrificing quality. 
+
+Interviewer: Can you tell me about your current workflow?
+
+Sarah: I usually start with a template or a design system. I don't have time to build everything from scratch. When I find a good template, I customize it quickly and move on. I'm 31, been doing this for about 5 years now.
+
+Interviewer: What frustrates you most about current tools?
+
+Sarah: The learning curve. Every tool seems to have a million features I'll never use. I just want the core stuff to work really well. The advanced features are overwhelming. I spend more time figuring out the tool than actually designing.
+
+Interviewer: How do you prefer to work?
+
+Sarah: Fast and efficient. I love keyboard shortcuts. I probably use templates for 80% of my projects. I also work late at night a lot, so dark mode is essential for me.
+
+Interviewer: What would make your life easier?
+
+Sarah: Something that just works out of the box. Good defaults. Smart templates that adapt to what I'm building. Less clicking around in menus. More doing.
+
+===
+
+=== Interview 02: Tom, Product Manager at Tech Startup ===
+Date: October 26, 2025
+Interviewer: Tell me about your role and how you use design tools.
+
+Tom: I'm a product manager, 38 years old. I'm not a designer by trade, but I need to create mockups and prototypes all the time to communicate ideas to my team. Speed and simplicity are everything for me.
+
+Interviewer: What's your biggest challenge?
+
+Tom: I'm technically savvy—I can code a bit—but design tools feel like they're built for professional designers. There's this assumption I know what all the features do. I don't. I just need to make something that looks decent quickly.
+
+Interviewer: How do you currently work around this?
+
+Tom: I copy and paste a lot. I find existing designs and modify them. Templates are my best friend. But even then, it's hard to get things to look professional.
+
+Interviewer: What would you want in an ideal tool?
+
+Tom: Something that understands what I'm trying to do and helps me get there. Like if I say "I need a landing page for a SaaS product," it just gives me something solid to start with. Then I can tweak from there.
+
+Interviewer: Any other pain points?
+
+Tom: Collaboration. I need to share my mockups with developers and get feedback quickly. Current tools make this harder than it should be.
+
+===
+
+=== Interview 03: Maya, Design Student ===
+Date: October 27, 2025
+Interviewer: Hi Maya, tell me about yourself.
+
+Maya: I'm 22, studying interaction design. I'm still learning the ropes, so I'm looking for tools that help me learn while I create. I'm somewhere between beginner and intermediate in terms of technical skills.
+
+Interviewer: What do you look for in a design tool?
+
+Maya: I want something modern and intuitive. Something my peers are using. I care a lot about the aesthetics of the tool itself—if it looks good, I trust it more. Also, I'm on a student budget, so pricing matters.
+
+Interviewer: How do you approach new projects?
+
+Maya: I always look for inspiration first. Then I try to recreate what I like and add my own twist. I'm not confident enough yet to start from a blank canvas. Templates and examples are super helpful.
+
+Interviewer: What makes a tool frustrating for you?
+
+Maya: When I can't figure out how to do something basic. Or when there's no clear way to learn. I want the tool to teach me as I use it, not force me to watch hours of tutorials before I can start.
+
+Interviewer: Anything else?
+
+Maya: Community matters. I want to see what others are making, get feedback, share my work. Design tools should be social.

@@ -26,7 +26,8 @@ import HeaderBrandKit from "@/components/shared/header/BrandKit/BrandKit";
 import HeaderWrapper from "@/components/shared/header/Wrapper/Wrapper";
 import HeaderDropdownWrapper from "@/components/shared/header/Dropdown/Wrapper/Wrapper";
 import GithubIcon from "@/components/shared/header/Github/_svg/GithubIcon";
-import ButtonUI from "@/components/ui/shadcn/button"
+import ButtonUI from "@/components/ui/shadcn/button";
+import { Sparkles } from "lucide-react"
 
 interface SearchResult {
   url: string;
@@ -217,6 +218,12 @@ export default function HomePage() {
                 <HeaderBrandKit />
               </div>
               <div className="flex gap-8">
+                <Link href="/artifacts" className="contents">
+                  <ButtonUI variant="secondary" className="gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    Artifacts Creator
+                  </ButtonUI>
+                </Link>
                 <a
                   className="contents"
                   href="https://github.com/mendableai/open-lovable"
