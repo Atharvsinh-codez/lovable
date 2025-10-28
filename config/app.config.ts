@@ -50,30 +50,30 @@ export const appConfig = {
   
   // AI Model Configuration
   ai: {
-    // Default AI model
-    defaultModel: 'moonshotai/kimi-k2-instruct-0905',
+    // Default AI model (using OpenRouter-compatible model)
+    defaultModel: 'anthropic/claude-3.5-sonnet',
     
-    // Available models
+    // Available models (all work via OpenRouter with OPENAI_API_KEY)
     availableModels: [
-      'openai/gpt-5',
-      'moonshotai/kimi-k2-instruct-0905',
-      'anthropic/claude-sonnet-4-20250514',
-      'google/gemini-2.0-flash-exp'
+      'anthropic/claude-3.5-sonnet',
+      'openai/gpt-4o',
+      'google/gemini-2.0-flash-exp',
+      'meta-llama/llama-3.3-70b-instruct'
     ],
     
     // Model display names
     modelDisplayNames: {
-      'openai/gpt-5': 'GPT-5',
-      'moonshotai/kimi-k2-instruct-0905': 'Kimi K2 (Groq)',
-      'anthropic/claude-sonnet-4-20250514': 'Sonnet 4',
-      'google/gemini-2.0-flash-exp': 'Gemini 2.0 Flash (Experimental)'
+      'anthropic/claude-3.5-sonnet': 'Claude 3.5 Sonnet',
+      'openai/gpt-4o': 'GPT-4o',
+      'google/gemini-2.0-flash-exp': 'Gemini 2.0 Flash',
+      'meta-llama/llama-3.3-70b-instruct': 'Llama 3.3 70B'
     } as Record<string, string>,
     
-    // Model API configuration
+    // Model API configuration (all use OpenRouter)
     modelApiConfig: {
-      'moonshotai/kimi-k2-instruct-0905': {
-        provider: 'groq',
-        model: 'moonshotai/kimi-k2-instruct-0905'
+      'anthropic/claude-3.5-sonnet': {
+        provider: 'openrouter',
+        model: 'anthropic/claude-3.5-sonnet'
       }
     },
     
