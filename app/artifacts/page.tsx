@@ -60,16 +60,15 @@ export default function ArtifactsPage() {
 
   const handleCreateNewTemplate = () => {
     setIsCreatingTemplate(true);
-    // This will open the chat interface for template creation
-    // For now, redirect to generation page with artifact type context
-    if (selectedArtifactType) {
-      window.location.href = `/generation?artifactType=${selectedArtifactType}&workspaceId=${uploadResult?.workspaceId}`;
-    }
+    // TODO: Integrate with chat UI for template creation
+    // For now, show a helpful message
+    alert('Template creation via AI chat is coming soon!\n\nFor now, you can:\n1. Browse existing templates below\n2. Manually create templates in workspace/default/templates/\n3. Check the default persona template as an example');
+    setIsCreatingTemplate(false);
   };
 
   const handleUseTemplate = (template: { id: string }) => {
-    // Navigate to generation page with template selected
-    window.location.href = `/generation?templateId=${template.id}&artifactType=${selectedArtifactType}&workspaceId=${uploadResult?.workspaceId}`;
+    // TODO: Implement artifact generation from template
+    alert(`Template "${template.id}" selected!\n\nNext steps (coming soon):\n1. AI will generate artifact data from your research\n2. Apply the template to create beautiful artifacts\n3. Export as PDF, PNG, or JSON\n\nFor now, check the template files in workspace/default/templates/`);
   };
 
   return (
