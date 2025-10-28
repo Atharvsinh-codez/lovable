@@ -91,6 +91,7 @@ function AISandboxPage() {
   const [sandboxFiles, setSandboxFiles] = useState<Record<string, string>>({});
   const [hasInitialSubmission, setHasInitialSubmission] = useState<boolean>(false);
   const [fileStructure, setFileStructure] = useState<string>('');
+  const [generationMode, setGenerationMode] = useState<'html' | 'react'>('html');
   
   const [conversationContext, setConversationContext] = useState<{
     scrapedWebsites: Array<{ url: string; content: any; timestamp: Date }>;
@@ -3426,7 +3427,49 @@ Focus on the key sections and content, making it clean and modern.`;
             )}
           </div>
 
-          <div className="p-4 border-t border-border bg-background-base">
+          <div className="px-4 pt-3 pb-2 border-t border-border bg-background-base">
+            <div className="mb-3">
+              <div className="text-xs font-medium text-gray-600 mb-2">Generation Mode</div>
+              <div className="inline-flex bg-gray-100 border border-gray-200 rounded-lg p-1 w-full">
+                <button
+                  onClick={() => setGenerationMode('html')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-xs font-medium ${
+                    generationMode === 'html'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'bg-transparent text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span className="font-semibold">HTML</span>
+                    <span className={`text-[10px] leading-tight text-center ${generationMode === 'html' ? 'text-gray-600' : 'text-gray-500'}`}>
+                      Simple artifacts
+                    </span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setGenerationMode('react')}
+                  className={`flex-1 px-3 py-2 rounded-md transition-all text-xs font-medium ${
+                    generationMode === 'react'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'bg-transparent text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <SiReact size={16} />
+                    <span className="font-semibold">React</span>
+                    <span className={`text-[10px] leading-tight text-center ${generationMode === 'react' ? 'text-gray-600' : 'text-gray-500'}`}>
+                      Advanced web apps
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-4 pb-4 bg-background-base">
             <HeroInput
               value={aiChatInput}
               onChange={setAiChatInput}
