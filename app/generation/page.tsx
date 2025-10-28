@@ -366,6 +366,14 @@ function AISandboxPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldAutoGenerate, homeUrlInput, showHomeScreen]);
 
+  // Create sandbox when switching to React mode
+  useEffect(() => {
+    // Only create sandbox when switching to React mode
+    if (generationMode === 'react' && !sandboxData) {
+      createSandbox(false);
+    }
+  }, [generationMode]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const updateStatus = (text: string, active: boolean) => {
     setStatus({ text, active });
   };
@@ -1864,7 +1872,10 @@ Tip: I automatically detect and install npm packages from your code imports (lik
                 } else if (data.type === 'html_artifact') {
                   // Handle HTML artifact in HTML mode
                   if (generationMode === 'html' && data.content) {
-                    setHtmlArtifact(data.content);
+                    const content = data.content || '';
+                    // Strip <file> wrapper if present
+                    const cleanedHtml = content.replace(/<file[^>]*>([\s\S]*)<\/file>/i, '$1');
+                    setHtmlArtifact(cleanedHtml);
                     setGenerationProgress(prev => ({ 
                       ...prev, 
                       status: 'HTML artifact generated',
@@ -2904,7 +2915,10 @@ Focus on the key sections and content, making it clean and modern.`;
                 } else if (data.type === 'html_artifact') {
                   // Handle HTML artifact in HTML mode
                   if (generationMode === 'html' && data.content) {
-                    setHtmlArtifact(data.content);
+                    const content = data.content || '';
+                    // Strip <file> wrapper if present
+                    const cleanedHtml = content.replace(/<file[^>]*>([\s\S]*)<\/file>/i, '$1');
+                    setHtmlArtifact(cleanedHtml);
                     setGenerationProgress(prev => ({ 
                       ...prev, 
                       status: 'HTML artifact generated',
