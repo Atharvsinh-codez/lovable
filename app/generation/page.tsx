@@ -92,6 +92,7 @@ function AISandboxPage() {
   const [hasInitialSubmission, setHasInitialSubmission] = useState<boolean>(false);
   const [fileStructure, setFileStructure] = useState<string>('');
   const [generationMode, setGenerationMode] = useState<'html' | 'react'>('html');
+  const [htmlArtifact, setHtmlArtifact] = useState<string>('');
   
   const [conversationContext, setConversationContext] = useState<{
     scrapedWebsites: Array<{ url: string; content: any; timestamp: Date }>;
@@ -251,16 +252,21 @@ function AISandboxPage() {
       
       setLoading(true);
       try {
-        if (sandboxIdParam) {
-          console.log('[home] Attempting to restore sandbox:', sandboxIdParam);
-          // For now, just create a new sandbox - you could enhance this to actually restore
-          // the specific sandbox if your backend supports it
-          sandboxCreated = true;
-          await createSandbox(true);
+        // Only create sandbox in React mode
+        if (generationMode === 'react') {
+          if (sandboxIdParam) {
+            console.log('[home] Attempting to restore sandbox:', sandboxIdParam);
+            // For now, just create a new sandbox - you could enhance this to actually restore
+            // the specific sandbox if your backend supports it
+            sandboxCreated = true;
+            await createSandbox(true);
+          } else {
+            console.log('[home] No sandbox in URL, creating new sandbox automatically...');
+            sandboxCreated = true;
+            await createSandbox(true);
+          }
         } else {
-          console.log('[home] No sandbox in URL, creating new sandbox automatically...');
-          sandboxCreated = true;
-          await createSandbox(true);
+          console.log('[home] HTML mode - skipping sandbox creation');
         }
         
         // If we have a URL from the home page, mark for automatic start
@@ -1574,7 +1580,29 @@ Tip: I automatically detect and install npm packages from your code imports (lik
         );
       }
       
-      // Show sandbox iframe - keep showing during edits, only hide during initial loading
+      // Show HTML artifact directly in iframe (HTML mode)
+      if (generationMode === 'html' && htmlArtifact) {
+        return (
+          <div className="relative w-full h-full">
+            <iframe
+              srcDoc={htmlArtifact}
+              className="w-full h-full border-none"
+              sandbox="allow-scripts"
+              title="HTML Artifact Preview"
+            />
+            
+            {/* Show a subtle indicator when code is being generated */}
+            {generationProgress.isGenerating && (
+              <div className="absolute top-4 right-4 inline-flex items-center gap-2 px-3 py-1.5 bg-black/80 backdrop-blur-sm rounded-lg">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-white text-xs font-medium">Generating HTML...</span>
+              </div>
+            )}
+          </div>
+        );
+      }
+      
+      // Show sandbox iframe - keep showing during edits, only hide during initial loading (React mode)
       if (sandboxData?.url) {
         return (
           <div className="relative w-full h-full">
@@ -1724,11 +1752,11 @@ Tip: I automatically detect and install npm packages from your code imports (lik
       return;
     }
     
-    // Start sandbox creation in parallel if needed
+    // Start sandbox creation in parallel if needed (only in React mode)
     let sandboxPromise: Promise<void> | null = null;
     let sandboxCreating = false;
     
-    if (!sandboxData) {
+    if (!sandboxData && generationMode === 'react') {
       sandboxCreating = true;
       addChatMessage('Creating sandbox while I plan your app...', 'system');
       sandboxPromise = createSandbox(true).catch((error: any) => {
@@ -1785,6 +1813,7 @@ Tip: I automatically detect and install npm packages from your code imports (lik
         body: JSON.stringify({
           prompt: message,
           model: aiModel,
+          mode: generationMode,
           context: fullContext,
           isEdit: conversationContext.appliedCode.length > 0
         })
@@ -1832,6 +1861,18 @@ Tip: I automatically detect and install npm packages from your code imports (lik
                     isThinking: false,
                     thinkingDuration: data.duration
                   }));
+                } else if (data.type === 'html_artifact') {
+                  // Handle HTML artifact in HTML mode
+                  if (generationMode === 'html' && data.content) {
+                    setHtmlArtifact(data.content);
+                    setGenerationProgress(prev => ({ 
+                      ...prev, 
+                      status: 'HTML artifact generated',
+                      isGenerating: false,
+                      isStreaming: false
+                    }));
+                    addChatMessage('HTML artifact generated successfully!', 'system');
+                  }
                 } else if (data.type === 'conversation') {
                   // Add conversational text to chat only if it's not code
                   let text = data.text || '';
@@ -2641,7 +2682,8 @@ Tip: I automatically detect and install npm packages from your code imports (lik
     addChatMessage(`Starting to clone ${cleanUrl}...`, 'system');
     
     // Start creating sandbox and capturing screenshot immediately in parallel
-    const sandboxPromise = !sandboxData ? createSandbox(true) : Promise.resolve(null);
+    // Only create sandbox in React mode
+    const sandboxPromise = !sandboxData && generationMode === 'react' ? createSandbox(true) : Promise.resolve(null);
     
     // Set loading stage immediately before hiding home screen
     setLoadingStage('gathering');
@@ -2815,6 +2857,7 @@ Focus on the key sections and content, making it clean and modern.`;
           body: JSON.stringify({ 
             prompt,
             model: aiModel,
+            mode: generationMode,
             context: {
               sandboxId: sandboxData?.sandboxId,
               structure: structureContent,
@@ -2858,6 +2901,18 @@ Focus on the key sections and content, making it clean and modern.`;
                     isThinking: false,
                     thinkingDuration: data.duration
                   }));
+                } else if (data.type === 'html_artifact') {
+                  // Handle HTML artifact in HTML mode
+                  if (generationMode === 'html' && data.content) {
+                    setHtmlArtifact(data.content);
+                    setGenerationProgress(prev => ({ 
+                      ...prev, 
+                      status: 'HTML artifact generated',
+                      isGenerating: false,
+                      isStreaming: false
+                    }));
+                    addChatMessage('HTML artifact generated successfully!', 'system');
+                  }
                 } else if (data.type === 'conversation') {
                   // Add conversational text to chat only if it's not code
                   let text = data.text || '';
