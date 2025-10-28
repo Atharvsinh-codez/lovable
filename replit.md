@@ -3,8 +3,8 @@
 ## Project Overview
 This project transforms Open Lovable (a website cloning tool) into an AI-powered design research artifact creation platform. Users chat with AI to create artifacts (personas, journey maps, empathy maps) directly from research data - no complex workflows, just natural conversation.
 
-**Current Status:** Simplified to chat-based generation (Occam's razor approach)  
-**Last Updated:** October 28, 2025 (Streamlined to simple chat interface)
+**Current Status:** HTML-first artifact generation with mode selector (Occam's razor approach)  
+**Last Updated:** October 28, 2025 (HTML mode for simple artifacts, React mode for advanced web apps)
 
 ---
 
@@ -87,12 +87,24 @@ All in `components/artifact/`:
 - **Result:** No more sandbox/Firecrawl errors in console
 - **Benefits:** Clean server logs, faster load times, focused user experience
 
-#### 8. Simplified Artifact Generation ✅ (NEW!)
-- **Approach:** Occam's Razor - use existing chat UI instead of complex wizard
-- **API:** `/api/generate-artifact` - Stream artifacts directly (no sandbox needed)
-- **Prompts:** `lib/prompts/artifact-prompts.ts` - Artifact-specific AI prompts
-- **Guide:** `docs/SIMPLE_ARTIFACT_GUIDE.md` - Complete usage guide
-- **Benefits:** Faster, simpler, more intuitive, no sandbox required
+#### 8. HTML-First Artifact System ✅ (LATEST!)
+- **Mode Selector:** Choose between HTML (default) and React modes in `/generation`
+- **HTML Mode:** Single-file artifacts with inline CSS/JS - perfect for personas, journey maps, reports
+  - No sandbox creation (instant rendering!)
+  - Generates complete HTML documents
+  - Secure iframe rendering (sandbox="allow-scripts" only)
+  - Print-friendly and exportable
+- **React Mode:** Multi-file React/TypeScript apps for advanced interactive experiences
+  - Full sandbox provisioning
+  - Multi-component architecture
+  - Existing workflow preserved
+- **API:** `/api/generate-ai-code-stream` - Branches on mode parameter
+- **Prompts:** `lib/prompts/artifact-prompts.ts` - Both HTML and React artifact prompts
+  - `HTML_ARTIFACT_SYSTEM_PROMPT` - Single-file HTML generation
+  - `createHTMLArtifactPrompt()` - Artifact-specific HTML prompts
+  - CSS-only charting techniques (no external libraries)
+  - WCAG 2.1 AA accessibility compliance
+- **Benefits:** Occam's razor in action - simple by default, complex when needed
 
 ---
 
@@ -299,6 +311,23 @@ All in `components/artifact/`:
 
 ## Recent Changes
 
+### October 28, 2025 - HTML-First Artifact System Complete ✨
+- **Mode Selector UI** - Added HTML vs React toggle in `/generation` (HTML default)
+- **HTML Artifact Prompts** - Complete prompt system for single-file HTML generation
+  - CSS-only charting techniques (progress bars, bar charts, pie charts)
+  - WCAG 2.1 AA accessibility compliance
+  - Comprehensive keyboard navigation support
+- **API Branching** - `/api/generate-ai-code-stream` now supports both modes
+  - HTML mode: Single file, no sandbox, instant rendering
+  - React mode: Multi-file, sandbox, existing workflow preserved
+- **Secure Rendering** - HTML artifacts render in isolated iframe (sandbox="allow-scripts")
+- **Bug Fixes** - Fixed React mode sandbox creation and HTML wrapper stripping
+- **All LSP errors resolved** - Clean TypeScript compilation
+- **OpenRouter Integration** - All models now use OpenRouter (works with OPENAI_API_KEY)
+- **Default Model** - Changed to Anthropic Claude 3.5 Sonnet via OpenRouter
+
+**Status:** Ready for artifact generation! Type "Doordash persona" in HTML mode to test 🎨
+
 ### October 28, 2025 - MVP Complete & Cleaned
 - Created complete template system from scratch
 - Built data upload and analysis
@@ -309,5 +338,3 @@ All in `components/artifact/`:
 - Fixed all LSP errors
 - **Cleaned homepage** - Removed website cloning features to eliminate console errors
 - Server running without errors
-
-**Status:** Ready for user testing! 🎉
