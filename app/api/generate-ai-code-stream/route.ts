@@ -10,6 +10,7 @@ import { executeSearchPlan, formatSearchResultsForAI, selectTargetFile } from '@
 import { FileManifest } from '@/types/file-manifest';
 import type { ConversationState, ConversationMessage, ConversationEdit } from '@/types/conversation';
 import { appConfig } from '@/config/app.config';
+import { HTML_ARTIFACT_SYSTEM_PROMPT, createHTMLArtifactPrompt, detectArtifactIntent } from '@/lib/prompts/artifact-prompts';
 
 // Force dynamic route to enable streaming
 export const dynamic = 'force-dynamic';
@@ -90,10 +91,11 @@ declare global {
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, model = 'openai/gpt-oss-20b', context, isEdit = false } = await request.json();
+    const { prompt, model = 'openai/gpt-oss-20b', context, isEdit = false, mode = 'react' } = await request.json();
     
     console.log('[generate-ai-code-stream] Received request:');
     console.log('[generate-ai-code-stream] - prompt:', prompt);
+    console.log('[generate-ai-code-stream] - mode:', mode);
     console.log('[generate-ai-code-stream] - isEdit:', isEdit);
     console.log('[generate-ai-code-stream] - context.sandboxId:', context?.sandboxId);
     console.log('[generate-ai-code-stream] - context.currentFiles:', context?.currentFiles ? Object.keys(context.currentFiles) : 'none');
@@ -153,6 +155,141 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
     
+    // HTML Artifact Mode - Separate generation path
+    if (mode === 'html') {
+      console.log('[generate-ai-code-stream] HTML artifact mode activated');
+      
+      // Create a stream for real-time updates
+      const encoder = new TextEncoder();
+      const stream = new TransformStream();
+      const writer = stream.writable.getWriter();
+      
+      // Function to send progress updates
+      const sendProgress = async (data: any) => {
+        const message = `data: ${JSON.stringify(data)}\n\n`;
+        try {
+          await writer.write(encoder.encode(message));
+        } catch (error) {
+          console.error('[generate-ai-code-stream] Error writing to stream:', error);
+        }
+      };
+      
+      // Start processing in background
+      (async () => {
+        try {
+          await sendProgress({ type: 'status', message: 'Detecting artifact type...' });
+          
+          // Detect artifact type from prompt
+          const { isArtifact, type } = detectArtifactIntent(prompt);
+          console.log('[generate-ai-code-stream] Artifact detection:', { isArtifact, type });
+          
+          // Build the user prompt
+          const userPrompt = isArtifact && type 
+            ? createHTMLArtifactPrompt(type, prompt)
+            : prompt;
+          
+          await sendProgress({ 
+            type: 'status', 
+            message: isArtifact ? `Generating ${type} artifact...` : 'Generating HTML...'
+          });
+          
+          // Use OpenRouter for HTML generation
+          const modelProvider = openai;
+          const actualModel = model;
+          
+          console.log(`[generate-ai-code-stream] HTML mode using model: ${actualModel}`);
+          
+          // Make streaming API call
+          const result = await streamText({
+            model: modelProvider(actualModel),
+            messages: [
+              { 
+                role: 'system', 
+                content: HTML_ARTIFACT_SYSTEM_PROMPT
+              },
+              { 
+                role: 'user', 
+                content: userPrompt
+              }
+            ],
+            temperature: 0.7
+          });
+          
+          // Stream the response
+          let generatedHTML = '';
+          for await (const textPart of result.textStream) {
+            const text = textPart || '';
+            generatedHTML += text;
+            
+            // Stream the raw text for live preview
+            await sendProgress({ 
+              type: 'stream', 
+              text: text,
+              raw: true 
+            });
+          }
+          
+          console.log('[generate-ai-code-stream] HTML generation complete, length:', generatedHTML.length);
+          
+          // Clean up the HTML if needed (remove markdown code fences if present)
+          let cleanHTML = generatedHTML.trim();
+          if (cleanHTML.includes('```html')) {
+            const htmlMatch = cleanHTML.match(/```html\n([\s\S]*?)```/);
+            if (htmlMatch) {
+              cleanHTML = htmlMatch[1];
+            }
+          } else if (cleanHTML.includes('```')) {
+            const codeMatch = cleanHTML.match(/```[\w]*\n([\s\S]*?)```/);
+            if (codeMatch) {
+              cleanHTML = codeMatch[1];
+            }
+          }
+          
+          // Ensure HTML starts with DOCTYPE if it doesn't already
+          if (!cleanHTML.startsWith('<!DOCTYPE')) {
+            console.log('[generate-ai-code-stream] Warning: Generated HTML missing DOCTYPE');
+          }
+          
+          // Format as file output for consistency with React mode
+          const fileOutput = `<file path="index.html">\n${cleanHTML}\n</file>`;
+          
+          await sendProgress({ 
+            type: 'complete', 
+            generatedCode: fileOutput,
+            explanation: isArtifact ? `Generated ${type} HTML artifact` : 'Generated HTML document',
+            files: 1,
+            components: 0,
+            model
+          });
+          
+        } catch (error) {
+          console.error('[generate-ai-code-stream] HTML mode error:', error);
+          await sendProgress({ 
+            type: 'error', 
+            error: (error as Error).message 
+          });
+        } finally {
+          await writer.close();
+        }
+      })();
+      
+      // Return the stream with proper headers
+      return new Response(stream.readable, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'Connection': 'keep-alive',
+          'Transfer-Encoding': 'chunked',
+          'Content-Encoding': 'none',
+          'X-Accel-Buffering': 'no',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
+    }
+    
+    // React Mode - Existing generation path (unchanged)
     // Create a stream for real-time updates
     const encoder = new TextEncoder();
     const stream = new TransformStream();
