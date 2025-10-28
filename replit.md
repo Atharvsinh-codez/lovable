@@ -20,6 +20,9 @@ Transform design research workflows through conversational AI that turns messy r
 - ✅ Set up workflow for Next.js development server
 - ✅ Application running successfully on port 5000
 - ✅ Created comprehensive product strategy for agentic chat-based artifact creation
+- ✅ **Configured OpenRouter** - Access to 100+ AI models through single API (GPT-4, Claude, Llama, etc.)
+  - Updated API endpoints to use `https://openrouter.ai/api/v1`
+  - See `docs/OPENROUTER_SETUP.md` for model selection guide
 
 ### Product Strategy Updated
 - Focus: Agentic chat interface for design research artifact creation
@@ -36,7 +39,8 @@ Transform design research workflows through conversational AI that turns messy r
 - **Runtime:** Node.js 20.19.3
 - **Package Manager:** npm (package-lock.json present)
 - **UI:** React 19.1.0, Tailwind CSS, Radix UI components
-- **AI Providers:** OpenAI, Anthropic, Groq, Google Gemini
+- **AI Gateway:** OpenRouter (provides access to 100+ models)
+- **AI Providers:** OpenAI, Anthropic, Groq, Google Gemini (via OpenRouter)
 - **Sandbox:** Vercel Sandbox + E2B (configurable)
 - **Web Scraping:** Firecrawl
 - **State:** Jotai
@@ -81,7 +85,7 @@ Transform design research workflows through conversational AI that turns messy r
 ## API Keys Required
 
 ### AI Providers (at least one required)
-- `OPENAI_API_KEY` - For OpenAI models (GPT-4, etc.)
+- `OPENAI_API_KEY` - **Now configured for OpenRouter** (access to 100+ models including GPT-4, Claude, Llama, etc.)
 - `ANTHROPIC_API_KEY` - For Claude models
 - `GROQ_API_KEY` - For fast Groq inference
 - `GEMINI_API_KEY` - For Google Gemini models
