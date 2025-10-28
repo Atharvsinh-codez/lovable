@@ -1,22 +1,24 @@
 # Artifact Creator - "Lovable for Design Artifacts"
 
 ## Project Overview
-This project transforms Open Lovable (a website cloning tool) into an AI-powered design research artifact creation platform. Users upload research data, AI analyzes it and suggests artifacts, then AI codes customizable templates that can be previewed in sandbox and saved for reuse.
+This project transforms Open Lovable (a website cloning tool) into an AI-powered design research artifact creation platform. Users chat with AI to create artifacts (personas, journey maps, empathy maps) directly from research data - no complex workflows, just natural conversation.
 
-**Current Status:** MVP complete and ready for testing  
-**Last Updated:** October 28, 2025 (Homepage cleaned up)
+**Current Status:** Simplified to chat-based generation (Occam's razor approach)  
+**Last Updated:** October 28, 2025 (Streamlined to simple chat interface)
 
 ---
 
 ## What We Built Tonight
 
-### Core Workflow
-1. **Upload Research Data** → User drags/drops interview transcripts, surveys, etc.
-2. **AI Analysis** → Analyzes data and suggests artifact types (personas, journey maps, etc.)
-3. **Template Creation** → AI codes templates in chat with live sandbox preview
-4. **Save & Reuse** → Templates saved for future use across projects
-5. **Generate Artifacts** → Apply templates to data to create multiple artifacts
-6. **Export** → PDF, HTML, JSON export options
+### Core Workflow (Simplified!)
+1. **Go to `/generation`** → Open the existing chat UI
+2. **Paste research data** → Copy/paste interviews, surveys, notes into chat
+3. **Ask for artifact** → "Create a persona from this data"
+4. **AI generates component** → Streams back a beautiful React component with inline data
+5. **Iterate** → "Make it more colorful", "Add pain points section"
+6. **Done!** → No sandbox needed, artifacts render inline in chat
+
+**Occam's Razor:** Why have a complex multi-step wizard when you can just chat?
 
 ### Key Features Implemented
 
@@ -84,6 +86,13 @@ All in `components/artifact/`:
 - **Features:** Promotes Artifacts Creator only (removed website cloning UI)
 - **Result:** No more sandbox/Firecrawl errors in console
 - **Benefits:** Clean server logs, faster load times, focused user experience
+
+#### 8. Simplified Artifact Generation ✅ (NEW!)
+- **Approach:** Occam's Razor - use existing chat UI instead of complex wizard
+- **API:** `/api/generate-artifact` - Stream artifacts directly (no sandbox needed)
+- **Prompts:** `lib/prompts/artifact-prompts.ts` - Artifact-specific AI prompts
+- **Guide:** `docs/SIMPLE_ARTIFACT_GUIDE.md` - Complete usage guide
+- **Benefits:** Faster, simpler, more intuitive, no sandbox required
 
 ---
 
