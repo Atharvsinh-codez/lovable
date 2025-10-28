@@ -4,7 +4,7 @@
 This project transforms Open Lovable (a website cloning tool) into an AI-powered design research artifact creation platform. Users upload research data, AI analyzes it and suggests artifacts, then AI codes customizable templates that can be previewed in sandbox and saved for reuse.
 
 **Current Status:** MVP complete and ready for testing  
-**Last Updated:** October 28, 2025
+**Last Updated:** October 28, 2025 (Homepage cleaned up)
 
 ---
 
@@ -78,6 +78,12 @@ All in `components/artifact/`:
 - `workspace/default/data/sample-interviews.txt` - 3 interview transcripts
 - Includes diverse user segments (freelancer, PM, student)
 - Different goals, pain points, behaviors to test analysis
+
+#### 7. Clean Homepage ✅
+- **File:** `app/page.tsx` - Simplified landing page
+- **Features:** Promotes Artifacts Creator only (removed website cloning UI)
+- **Result:** No more sandbox/Firecrawl errors in console
+- **Benefits:** Clean server logs, faster load times, focused user experience
 
 ---
 
@@ -250,9 +256,10 @@ All in `components/artifact/`:
 - No template previews in library (shows placeholder)
 - Citation hover states need polish
 
-### Won't Fix (By Design)
-- Sandbox errors - Not needed for artifact creation
-- Firecrawl errors - Optional feature for website cloning only
+### Fixed Issues
+- ✅ Homepage sandbox/Firecrawl errors - Removed website cloning UI (October 28, 2025)
+- ✅ Security vulnerabilities - All paths sanitized against directory traversal
+- ✅ LSP errors - All TypeScript errors resolved
 
 ---
 
@@ -283,13 +290,15 @@ All in `components/artifact/`:
 
 ## Recent Changes
 
-### October 28, 2025 - MVP Complete
+### October 28, 2025 - MVP Complete & Cleaned
 - Created complete template system from scratch
 - Built data upload and analysis
 - Created all UI components
 - Added navigation to homepage
 - Created sample data for testing
+- Fixed all security vulnerabilities (directory traversal)
 - Fixed all LSP errors
+- **Cleaned homepage** - Removed website cloning features to eliminate console errors
 - Server running without errors
 
 **Status:** Ready for user testing! 🎉
