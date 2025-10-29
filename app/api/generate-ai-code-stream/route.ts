@@ -250,12 +250,18 @@ export async function POST(request: NextRequest) {
             console.log('[generate-ai-code-stream] Warning: Generated HTML missing DOCTYPE');
           }
           
-          // Format as file output for consistency with React mode
-          const fileOutput = `<file path="index.html">\n${cleanHTML}\n</file>`;
+          // Send HTML artifact event
+          await sendProgress({ 
+            type: 'html_artifact', 
+            content: cleanHTML,
+            artifactType: type || 'html',
+            message: isArtifact ? `Generated ${type} HTML artifact` : 'Generated HTML document'
+          });
           
+          // Also send complete event for UI status
           await sendProgress({ 
             type: 'complete', 
-            generatedCode: fileOutput,
+            generatedCode: `<file path="index.html">\n${cleanHTML}\n</file>`,
             explanation: isArtifact ? `Generated ${type} HTML artifact` : 'Generated HTML document',
             files: 1,
             components: 0,
