@@ -25,6 +25,7 @@ import {
 import { Paperclip, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CodeApplicationProgress, { type CodeApplicationState } from '@/components/CodeApplicationProgress';
+import { AnalysisMessage } from '@/components/chat/AnalysisMessage';
 
 interface SandboxData {
   sandboxId: string;
@@ -34,7 +35,7 @@ interface SandboxData {
 
 interface ChatMessage {
   content: string;
-  type: 'user' | 'ai' | 'system' | 'file-update' | 'command' | 'error';
+  type: 'user' | 'ai' | 'system' | 'file-update' | 'command' | 'error' | 'analysis';
   timestamp: Date;
   metadata?: {
     scrapedUrl?: string;
@@ -42,6 +43,17 @@ interface ChatMessage {
     generatedCode?: string;
     appliedFiles?: string[];
     commandType?: 'input' | 'output' | 'error' | 'success';
+    analysis?: {
+      themes?: string[];
+      insights?: string[];
+      userSegments?: Array<{name: string; description: string}>;
+      suggestedArtifacts?: Array<{
+        type: string;
+        label: string;
+        description?: string;
+        confidence?: number;
+      }>;
+    };
   };
 }
 
@@ -106,12 +118,26 @@ function AISandboxPage() {
     appliedCode: Array<{ files: string[]; timestamp: Date }>;
     currentProject: string;
     lastGeneratedCode?: string;
+    uploadedFiles?: Array<{ id: string; filename: string; size: number; path: string }>;
+    analysisResults?: {
+      themes?: string[];
+      insights?: string[];
+      userSegments?: Array<{name: string; description: string}>;
+      suggestedArtifacts?: Array<{
+        type: string;
+        label: string;
+        description?: string;
+        confidence?: number;
+      }>;
+    };
   }>({
     scrapedWebsites: [],
     generatedComponents: [],
     appliedCode: [],
     currentProject: '',
-    lastGeneratedCode: undefined
+    lastGeneratedCode: undefined,
+    uploadedFiles: [],
+    analysisResults: undefined
   });
   
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -460,12 +486,37 @@ function AISandboxPage() {
       // Update uploaded files state
       setUploadedFiles(prev => [...prev, ...result.files]);
 
+      // Update conversation context with uploaded files and analysis
+      setConversationContext(prev => ({
+        ...prev,
+        uploadedFiles: [...(prev.uploadedFiles || []), ...result.files],
+        analysisResults: result.analysis
+      }));
+
       // Show success message with file details
       const fileNames = filesArray.map(f => f.name).join(', ');
       addChatMessage(
-        `✓ Successfully uploaded: ${fileNames}\n\nAnalysis complete! ${result.analysis?.suggestedArtifacts?.length || 0} artifact suggestions found.`,
+        `✓ Successfully uploaded: ${fileNames}`,
         'system'
       );
+
+      // Create analysis message with the analysis data
+      if (result.analysis) {
+        // Transform API analysis format to match AnalysisMessage component
+        const analysisData = {
+          themes: result.analysis.themes,
+          insights: result.analysis.suggestedArtifacts?.map((artifact: any) => artifact.reasoning),
+          userSegments: result.analysis.dataSegments,
+          suggestedArtifacts: result.analysis.suggestedArtifacts?.map((artifact: any) => ({
+            type: artifact.type,
+            label: artifact.name,
+            description: artifact.description,
+            confidence: artifact.confidence
+          }))
+        };
+
+        addChatMessage('', 'analysis', { analysis: analysisData });
+      }
 
       console.log('[file-upload] Upload result:', result);
     } catch (error) {
@@ -504,6 +555,20 @@ function AISandboxPage() {
 
   const openFilePicker = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleSuggestionClick = (artifactType: string) => {
+    // Placeholder for artifact generation
+    // Full implementation will be added in the next task
+    console.log('[handleSuggestionClick] Artifact type:', artifactType);
+    
+    addChatMessage(
+      `Generating ${artifactType}... (Full artifact generation coming soon!)`,
+      'system'
+    );
+    
+    // TODO: Wire up to actual artifact generation API
+    // This will be implemented in the next task
   };
   
   const checkAndInstallPackages = async () => {
@@ -3433,6 +3498,18 @@ Focus on the key sections and content, making it clean and modern.`;
               
               // Get the files from metadata if this is a completion message
               // const completedFiles = msg.metadata?.appliedFiles || [];
+              
+              // Handle analysis messages specially
+              if (msg.type === 'analysis' && msg.metadata?.analysis) {
+                return (
+                  <div key={idx} className="block">
+                    <AnalysisMessage 
+                      analysis={msg.metadata.analysis}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
+                  </div>
+                );
+              }
               
               return (
                 <div key={idx} className="block">
