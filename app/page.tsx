@@ -1,8 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { Sparkles } from "lucide-react";
-
 // Import shared components
 import { Connector } from "@/components/shared/layout/curvy-rect";
 import HeroFlame from "@/components/shared/effects/flame/hero-flame";
@@ -42,12 +39,6 @@ export default function HomePage() {
                 <HeaderBrandKit />
               </div>
               <div className="flex gap-8">
-                <Link href="/artifacts" className="contents">
-                  <ButtonUI variant="secondary" className="gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    Artifacts Creator
-                  </ButtonUI>
-                </Link>
                 <a
                   className="contents"
                   href="https://github.com/mendableai/open-lovable"
@@ -85,15 +76,14 @@ export default function HomePage() {
                 with custom templates—all backed by evidence.
               </p>
 
-              {/* CTA Button */}
-              <div className="flex justify-center gap-4">
-                <Link href="/artifacts">
+              {/* CTA Button - artifacts workflow has been deprecated, all functionality now in chat */}
+              {/* <div className="flex justify-center gap-4">
+                <Link href="/generation">
                   <ButtonUI className="gap-2 h-12 px-8 text-base">
-                    <Sparkles className="w-5 h-5" />
                     Get Started
                   </ButtonUI>
                 </Link>
-              </div>
+              </div> */}
 
               {/* Feature Cards */}
               <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
