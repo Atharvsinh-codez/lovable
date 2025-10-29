@@ -22,6 +22,7 @@ import {
   SiCss3, 
   SiJson 
 } from '@/lib/icons';
+import { Paperclip, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CodeApplicationProgress, { type CodeApplicationState } from '@/components/CodeApplicationProgress';
 
@@ -93,6 +94,11 @@ function AISandboxPage() {
   const [fileStructure, setFileStructure] = useState<string>('');
   const [generationMode, setGenerationMode] = useState<'html' | 'react'>('html');
   const [htmlArtifact, setHtmlArtifact] = useState<string>('');
+  
+  // File upload state
+  const [isDraggingFile, setIsDraggingFile] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{ id: string; filename: string; size: number }>>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [conversationContext, setConversationContext] = useState<{
     scrapedWebsites: Array<{ url: string; content: any; timestamp: Date }>;
@@ -393,6 +399,111 @@ function AISandboxPage() {
       }
       return [...prev, { content, type, timestamp: new Date(), metadata }];
     });
+  };
+  
+  // File upload handlers
+  const ACCEPTED_FILE_TYPES = ['.txt', '.csv', '.json', '.md', '.pdf'];
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
+  const validateFile = (file: File): string | null => {
+    const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+    if (!ACCEPTED_FILE_TYPES.includes(ext)) {
+      return `File type ${ext} not supported. Please upload ${ACCEPTED_FILE_TYPES.join(', ')} files.`;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      return `File size exceeds ${formatFileSize(MAX_FILE_SIZE)} limit.`;
+    }
+    return null;
+  };
+
+  const handleFileUpload = async (files: FileList | File[]) => {
+    const filesArray = Array.from(files);
+    
+    // Validate files
+    const invalidFile = filesArray.find(file => validateFile(file));
+    if (invalidFile) {
+      const error = validateFile(invalidFile);
+      addChatMessage(error || 'Invalid file', 'error');
+      return;
+    }
+
+    // Show uploading message
+    addChatMessage(`Uploading ${filesArray.length} file(s)...`, 'system');
+
+    try {
+      const formData = new FormData();
+      filesArray.forEach(file => {
+        formData.append('files', file);
+      });
+      formData.append('workspaceId', 'default');
+
+      const response = await fetch('/api/upload-research-data', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
+      }
+
+      const result = await response.json();
+
+      // Update uploaded files state
+      setUploadedFiles(prev => [...prev, ...result.files]);
+
+      // Show success message with file details
+      const fileNames = filesArray.map(f => f.name).join(', ');
+      addChatMessage(
+        `✓ Successfully uploaded: ${fileNames}\n\nAnalysis complete! ${result.analysis?.suggestedArtifacts?.length || 0} artifact suggestions found.`,
+        'system'
+      );
+
+      console.log('[file-upload] Upload result:', result);
+    } catch (error) {
+      console.error('[file-upload] Upload error:', error);
+      addChatMessage(
+        `Failed to upload files: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        'error'
+      );
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingFile(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingFile(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingFile(false);
+    
+    if (e.dataTransfer.files.length > 0) {
+      handleFileUpload(e.dataTransfer.files);
+    }
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFileUpload(e.target.files);
+    }
+  };
+
+  const openFilePicker = () => {
+    fileInputRef.current?.click();
   };
   
   const checkAndInstallPackages = async () => {
@@ -3293,12 +3404,27 @@ Focus on the key sections and content, making it clean and modern.`;
           )}
 
           <div 
-            className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide" 
+            className={`flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide relative ${
+              isDraggingFile ? 'ring-2 ring-blue-400 ring-inset' : ''
+            }`}
             ref={chatMessagesRef}
             onScroll={(e) => {
               const scrollTop = e.currentTarget.scrollTop;
               setSidebarScrolled(scrollTop > 50);
-            }}>
+            }}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {isDraggingFile && (
+              <div className="absolute inset-0 bg-blue-50 bg-opacity-90 flex items-center justify-center z-50 pointer-events-none">
+                <div className="text-center">
+                  <Upload className="w-12 h-12 text-blue-500 mx-auto mb-2" />
+                  <p className="text-blue-700 font-medium">Drop files here to upload</p>
+                  <p className="text-blue-600 text-sm mt-1">Accepted: .txt, .csv, .json, .md, .pdf</p>
+                </div>
+              </div>
+            )}
             {chatMessages.map((msg, idx) => {
               // Check if this message is from a successful generation
               const isGenerationComplete = msg.content.includes('Successfully recreated') || 
@@ -3539,12 +3665,23 @@ Focus on the key sections and content, making it clean and modern.`;
           </div>
 
           <div className="px-4 pb-4 bg-background-base">
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept={ACCEPTED_FILE_TYPES.join(',')}
+              onChange={handleFileInputChange}
+              className="hidden"
+            />
+            
             <HeroInput
               value={aiChatInput}
               onChange={setAiChatInput}
               onSubmit={sendChatMessage}
               placeholder="Describe what you want to build..."
               showSearchFeatures={false}
+              onFileUpload={openFilePicker}
             />
           </div>
         </div>

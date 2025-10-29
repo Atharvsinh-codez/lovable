@@ -1,0 +1,2524 @@
+[Problem Brief] Teammate Diagnosis of Merchant Issues
+Working Team: Mauricio Steinbruch (Prod), Leanna Wong Nikhil Sharma Leon Choi (Ops),
+Brennan Martin (Design), Abhinav Mummidi (Eng), Patty Ho Jennifer Xia (Analytics), Minal Jain (UXR) 
+Reference Docs: Mx Support Ops Brief, Diagnosis Ops brief, UXR Pineapple research, MTO/DWR analysis
+
+Context
+
+Today, Merchants reach out to support to get help in mainly two categories of issues:
+
+
+Categories                               Example issue types
+
+
+●  Order Management Issues - Issues related to the fulfillment and processing of customer orders. 
+This group includes inquiries about order status, handling disputes, and managing items’ 
+availability.
+○  Order Status Inquiries
+○  Menu Update - e.g. some item is out of stock
+○  Cancel Order Request
+○  Cancel Order dispute
+○  Error Charge Dispute
+○  Issues with Pickup
+○  Item Unavailable
+
+
+●  Account Management Issues - These reflect more administrative, complex issues that can impact 
+the health of the business as a whole. It includes maintaining accurate account information, 
+handling payments not received, and ensuring secure access to business portals.
+○  Store Status
+○  Deposit Discrepancy
+○  Update Account Details
+○  Update Bank Information
+○  Issue with Portal Log in
+○  Tablet ordering & status
+○  Change of Ownership
+
+
+While Order Management issues are by far more frequent and account for 72.5% of Mx MTO (vs 22.7% 
+Account Management, 4.7% Other), Account Management issues are bigger contributors to a negative 
+DWR (‘Did we Resolve?’). Today, Merchants report that they are unhappy with the resolutions we 
+provide 27.9% of the time (72.1% DWR). Of these, 15.23 percentage points come from Account 
+management issues, while only 10.6 p.p. come from Order Management issues (2 p.p. from Other). We 
+attribute this imbalance to the nature of the impact that stems from an Account Management unsolved 
+issue, given it can directly reflect on Merchant’s bottom line.
+
+In this brief, we will focus on identifying key aspects that make handling Account Management 
+issues hard for our Teammates.
+
+Problem
+
+Today, it is painful and time consuming for Teammates to diagnose Mx account management issues. 
+This is bad because it leads to slow and often incomplete resolutions for our Merchants - 
+ultimately eroding their trust with DoorDash.
+
+Resolutions are painful and time consuming. Teammates are required to navigate through several 
+different tools and follow multiple steps in order to understand what the gaps are in Merchant’s 
+accounts and fix them. These steps are laid out in knowledge base articles, which makes the process 
+tedious and prone to error.
+
+Additionally, following these steps is extremely time consuming, which can reflect on:
+●  Slowness in live cases: While complex account management issues largely get resolved by MXPs, 
+their inbounds often begin as a phone case, which is handled by our T1 agents (81% of Account 
+Management cases are Phone cases). These can be incredibly painful for the Merchant as they have to 
+hold on the line during their busy operations, while T1 agents try to find a path for them.
+● Slowness in async cases: Some Merchants opt to report their issues directly to their MXPs, via 
+email (13% of Account Management cases). Here, a few minutes or seconds delay won’t impact the 
+customer as much - however, these inefficiencies accumulate and consume more of our MXPs bandwidth, 
+which prevents them from effectively supporting more cases across their 1k+ stores they manage.
+
+Resolutions are often incomplete. Teammates will often only resolve the specific issue Merchants 
+are reaching out about. However, these issues are often tied to other issues and only resolving 
+what the Merchant is asking for doesn’t fully solve their problems. As a consequence, Merchants 
+realize in the next few days/weeks that their issues are still not resolved, leading them to 
+reinbound to support.
+
+Supporting Evidence
+
+1/ It is painful and slow for Teammates to diagnose Mx account issues
+
+MXPs indicate that they spent at least 4+ min in diagnosis-only activities for these issue types 
+(anecdotal, based on survey data). This time is not inclusive of executing any workflows and/or 
+taking any actions to resolve the issue.
+
+Issue Type               Average Diagnostic Time¹
+
+Sign Up Questions                    4.7 min
+
+Store Status                       4.3 min
+
+Deposit Discrepancies                  5.0 min
+
+
+Suspected Fraudster impersonating of Mx
+5.2 min
+
+Tablet - Login Issues or Error Messages         4.2 min
+
+Tablet - Ordering or Returning              3.9 min
+
+POS - Troubleshooting                  5.2 min
+
+Sales and Marketing Requests              5.0 min
+
+Update Bank Information                 4.9 min
+
+(1)  Diagnostic time determined through MXP surveys where midpoint of minute long buckets were used 
+to determine an average time spent. Longest option given to MXPs was 5+ min and thus numbers 
+reflected above are potentially understated as 10 min would be represented as 5.5 min.
+(2) Source:  Diagnosis Time Data Capture
+
+Example Scenario: Mx reports that they are not receiving orders. To diagnose the root cause, the Tx 
+needs to check the following:
+
+
+Checks
+Tx Action
+Tools (typically they check one by bucket)
+Screenshot
+
+Confirm the Mx has completed   Tx checks the Mx is active     MINT onboarding
+
+
+
+
+
+
+
+
+
+
+
+MINT
+
+
+
+
+
+MINT > Store Change History to confirm the Mx has never been active
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MP        (example of a tablet Mx)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(example of POS Mx)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+“DDMX” (SFDC)
+
+Check for deactivations
+Tx checks for a temp/perm deactivation
+MINT (Temp/ Perm)
+
+
+
+
+
+
+
+
+
+
+
+
+
+MINT (Temporary Deactivation)
+
+
+
+
+
+
+
+
+
+
+
+
+
+MP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Confirm if the menu link is active
+Tx checks for a menu link
+MINT
+
+
+
+
+
+MP
+
+Confirm if store hours are correct
+Tx checks for store hours
+MINT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MP
+
+
+
+
+
+
+
+
+
+
+Confirm if there are special hours
+Tx checks for special hours
+MINT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MP
+
+Confirm there are no Duplicate Stores
+Tx checks for duplicate stores
+Sigma
+TBC
+
+
+Market Hours
+Tx checks market hours
+Sigma
+
+
+
+
+
+POS Failure
+Tx checks for a "Point of Sale Placement Failure” on recent orders
+THQ
+
+
+
+
+
+
+
+Fallback Order Protocol
+Tx checks for the fallback order protocol
+THQ
+
+
+
+
+
+
+
+POS Canceled Orders
+Tx checks for how orders were canceled
+THQ
+
+
+
+
+
+
+
+
+2/ An incomplete (or incorrect) diagnosis leads to issues only partially resolved and reinbounds.
+
+As the diagnosis process gets more complex, we see an increased chance of Teammates misdiagnosing 
+and issuing incomplete resolutions. As a result, Merchants end up getting escalated or 
+re-inbounding which can be observed with the high % of non-FCR (‘First Contact Resolution’) cases 
+for most of the issue types in the table below (see column 2 in table below).
+
+While some of the root causes for non-FCR are driven by the process that we define for Customers 
+(e.g. Customer must get transferred to a specialty pod resulting in multiple touches), we continue 
+to see significant non-FCR rates when these are taken out of the picture. For instance, when we 
+look only at reinbounds for the same issue (Column 3), we see that  over a quarter of Deposit 
+Discrepancies result in Merchants having to contact DD multiple times, and over 20% of tablet 
+login/error messages, and ordering/returning issues require the same.
+
+Issue Type
+Total % of non-FCR Cases³
+Total % of Repeat Contact on Same Account non-FCR Cases³
+
+
+Sign Up Questions
+
+33.0%
+
+12.2%
+
+
+Store Status
+
+29.5%
+
+13.9%
+
+
+Deposit Discrepancies
+
+71.5%
+
+26.3%
+
+
+Suspected Fraudster impersonating of Mx
+
+75.6%
+
+17.7%
+
+
+Tablet - Login Issues or Error Messages
+
+58.3%
+
+21.5%
+
+
+Tablet - Ordering or Returning
+
+69.4%
+
+22.2%
+
+
+POS - Troubleshooting
+
+25.5%
+
+0.7%
+
+
+Sales and Marketing Requests
+
+26.8%
+
+7.5%
+
+
+Update Bank Information
+(3) Source: Tableau FCR Dashboard
+
+Example cases:
+
+
+Case 1 - 634805869 (PM)
+
+60.2%
+
+
+
+
+
+
+Case 2 - 666248308 (PM)
+
+19.1%
+
+
+
+
+
+
+
+
+Case 3 - 635139995 (PM)
+
+
+●  Issue: Mx flagged they received an alert that we couldn't deposit payments due to his banking 
+information. Tx misdiagnosed that he was having trouble updating his bank account, and asked for a 
+screenshot of the error message, along with verification steps.
+●  Gap: Tx did not identify the Mx needed to update their information via Stripe to receive 
+payments. They should have used the Payout
+ Failure Dashboard to determine if Mx was part of KYC (see all steps here).
+●  Outcome: Because of misdiagnosis, the Mx was told to fill out a form to verify on email and 
+still nothing was done to solve their case. Mx then re-inbounded to us two days later and still 
+didn’t have their issue solved.
+●  Call duration: First call - 17:51 minutes; Second
+ call - 9:39 minutes; (listen  here)
+●  Issue: Mx logged in to the portal and clicked ‘activate your store’ but received an error 
+message. T1 directed Mx to the bank account tab to validate if information has been verified. Put 
+the Mx on hold for 4 mins to investigate. Determined the Mx was deactivated due to being at a 
+residential address
+●  Gap: Tx should have immediately checked MINT to see if the Mx was inactive, and why
+●  Outcome: After 5+ calls in the period of 2 weeks going back and forth, the Mx was able to remove 
+the fraud check given a residential address and get their store activated.
+● Call duration:  25:43 minutes
+●  Issue: MXP misinterpreted Mx as a bank account update vs removing a proactive fraud block on an 
+update the Mx already applied, leading to the case incorrectly handled as a Bank Account Update.
+●  Gap: MXP should have proceeded with proactive fraud block removal. We require only the photo ID 
+(front/back).
+●  Outcome: Merchant stated they had to be verified at least three times, and re-inbounded several 
+times.
+● Call Duration: 15 minutes
+
+
+Proposed Solutions
+
+In order to address the gap that Teammates face to correctly and efficiently diagnose Merchant’s 
+issues, we propose to build TruthFinder - a diagnostic tool that quickly takes them on the path to 
+resolution. This tool will be:
+
+
+Principle
+User Story
+Example Requirements
+
+
+Easily Accessible
+Teammates leverage this tool as their default first step in their journey to work Merchant cases. 
+Regardless of the channel where the chase is coming from (phone, email, etc), they are only a click 
+away (or less) from accessing the diagnostics view.
+Teammates see TruthFinder in their default Mx page in THQ. When dealing with SFDC, they have a 
+direct link to this page.
+
+
+Intuitive
+Teammates easily understand the root cause of issues Merchant’s are facing by simply looking at 
+TruthFinder. They are also able to proactively identify if there are additional issues (that Mx may 
+not be explicitly calling out) that are impacting the overall health of Merchants’ accounts.
+Through an intuitive UI, Teammates can glance through the Mx page and immediately understand the 
+gaps with the account.
+Once they spot the issues, they can also ‘double click’ on them in order to learn more and take 
+action.
+
+
+Accurate
+TruthFinder is highly trusted by Teammates because it always leverages the source of truth. 
+Teammates no longer have to double check status in different locations.
+TruthFinder pulls information from the most reliable sources and is the source of truth for 
+Teammates.
+
+
+Scalable
+Teammates continue to expand their usage of the tool, given they see increased coverage and 
+applicability over time.
+Through a scalable UI, we can continuously add more use cases to be covered by the tool.
+
+We propose to prioritize the most painful issue types first, in order to get the tool off the 
+ground while delivering impact and informing our next steps:
+
+Prioritization
+
+Issue Type
+Verification Required
+Priority
+Non DWR p.p.
+Proposed Timeline
+Required Signals
+
+
+Store Status         No
+
+P0    1.59 p.p.
+
+Q1     ●  [MINT] Is Mx active status
+● [MP] Onboarding status
+● [MINT] Permanent deactivation
+● [MINT] Temporary deactivation
+●  [MINT] Is Menu link active + display menu link
+● [MINT] Store hours
+●  [MINT] Is Menu active
+●  [MINT] Special hours closure
+●  [Sigma] Check for duplicate stores
+●  [Sigma] Check market hours
+●  [Sigma] Check delivery radius
+● [THQ] POS failure reason
+●  [THQ] POS canceled orders
+● [Sigma] Pricing inflation
+● [MINT] Business tags
+
+
+Deposit Discrepancies (+ missing payments)
+
+Yes
+
+P0    1.55 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+●  [Payment Portal] Proactive fraud block
+● [Fraud Workstation]
+●  [Payment Portal] Payment Status + Failure Reason
+●  [MP] KYC Stripe Block
+●  [Payment Portal] Duplicate Account IDs
+● [Stripe]
+
+
+Sales and Marketing Request  No
+P0    1.15 p.p.
+Q1     ●  [MP] Campaign Tab
+● [MP] ‘Co-funded’ breakdown
+● [Sigma] Promotions Sigma
+● [Query]
+
+
+Update Account Details
+Yes
+P0    1.07 p.p
+Q1     ●  [MINT] Phone number, Store Address, Store Name, Business Name, Business Tags, Contact 
+emails
+●  [Salesforce] Decision Maker information
+
+
+Suspected Fraudster Impersonating Mx
+
+Yes
+
+P0    0.16 p.p.
+
+Q1     ●  [MINT] Change History
+● [Sigma] SS COO Dashboard
+● [Slack] #mx-bank-changes
+●  [Sigma] Merchant Portal Employee Detail by Email
+
+
+Update Bank Information
+
+Yes
+
+P0    1.01 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+
+
+Portal or Mobile Login
+
+Yes
+
+P1    0.85 p.p.
+
+Q2     ●  [Sigma] Merchant Portal Employee Detail by Email Address
+
+
+Sign up Questions       No
+
+P1    0.39 p.p.
+
+Q2     ●  [MINT] is Mx active status
+●  [MINT] History shows the Mx has never been active
+●  [MP] Onboarding status found in Activations Tracker
+
+
+Tablet Ordering and Returning
+
+Yes
+
+P1     0.80 p.p.     Q2
+
+●  [DDMX] Tablet Shipping status
+
+
+Tablet Troubleshooting     No
+P1    0.43 p.p.
+Q2     ●  [MINT] Deactivations
+●  [DDMX] Tablet Shipping status
+
+Issue Type
+Verification Required
+Priority
+Non DWR p.p.
+Proposed Timeline
+Required Signals
+
+
+Store Status         No
+
+P0    1.59 p.p.
+
+Q1     ●  [MINT] Is Mx active status
+● [MP] Onboarding status
+● [MINT] Permanent deactivation
+● [MINT] Temporary deactivation
+●  [MINT] Is Menu link active + display menu link
+● [MINT] Store hours
+●  [MINT] Is Menu active
+●  [MINT] Special hours closure
+●  [Sigma] Check for duplicate stores
+●  [Sigma] Check market hours
+●  [Sigma] Check delivery radius
+● [THQ] POS failure reason
+●  [THQ] POS canceled orders
+● [Sigma] Pricing inflation
+● [MINT] Business tags
+
+
+Deposit Discrepancies (+ missing payments)
+
+Yes
+
+P0    1.55 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+●  [Payment Portal] Proactive fraud block
+● [Fraud Workstation]
+●  [Payment Portal] Payment Status + Failure Reason
+●  [MP] KYC Stripe Block
+●  [Payment Portal] Duplicate Account IDs
+● [Stripe]
+
+
+Sales and Marketing Request  No
+P0    1.15 p.p.
+Q1     ●  [MP] Campaign Tab
+● [MP] ‘Co-funded’ breakdown
+● [Sigma] Promotions Sigma
+● [Query]
+
+
+Update Account Details
+Yes
+P0    1.07 p.p
+Q1     ●  [MINT] Phone number, Store Address, Store Name, Business Name, Business Tags, Contact 
+emails
+●  [Salesforce] Decision Maker information
+
+
+Suspected Fraudster Impersonating Mx
+
+Yes
+
+P0    0.16 p.p.
+
+Q1     ●  [MINT] Change History
+● [Sigma] SS COO Dashboard
+● [Slack] #mx-bank-changes
+●  [Sigma] Merchant Portal Employee Detail by Email
+
+
+Update Bank Information
+
+Yes
+
+P0    1.01 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+
+
+Portal or Mobile Login
+
+Yes
+
+P1    0.85 p.p.
+
+Q2     ●  [Sigma] Merchant Portal Employee Detail by Email Address
+
+
+Sign up Questions       No
+
+P1    0.39 p.p.
+
+Q2     ●  [MINT] is Mx active status
+●  [MINT] History shows the Mx has never been active
+●  [MP] Onboarding status found in Activations Tracker
+
+
+Tablet Ordering and Returning
+
+Yes
+
+P1     0.80 p.p.     Q2
+
+●  [DDMX] Tablet Shipping status
+
+● [MINT] Tablet error messages
+
+Issue Type
+Verification Required
+Priority
+Non DWR p.p.
+Proposed Timeline
+Required Signals
+
+
+Store Status         No
+
+P0    1.59 p.p.
+
+Q1     ●  [MINT] Is Mx active status
+● [MP] Onboarding status
+● [MINT] Permanent deactivation
+● [MINT] Temporary deactivation
+●  [MINT] Is Menu link active + display menu link
+● [MINT] Store hours
+●  [MINT] Is Menu active
+●  [MINT] Special hours closure
+●  [Sigma] Check for duplicate stores
+●  [Sigma] Check market hours
+●  [Sigma] Check delivery radius
+● [THQ] POS failure reason
+●  [THQ] POS canceled orders
+● [Sigma] Pricing inflation
+● [MINT] Business tags
+
+
+Deposit Discrepancies (+ missing payments)
+
+Yes
+
+P0    1.55 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+●  [Payment Portal] Proactive fraud block
+● [Fraud Workstation]
+●  [Payment Portal] Payment Status + Failure Reason
+●  [MP] KYC Stripe Block
+●  [Payment Portal] Duplicate Account IDs
+● [Stripe]
+
+
+Sales and Marketing Request  No
+P0    1.15 p.p.
+Q1     ●  [MP] Campaign Tab
+● [MP] ‘Co-funded’ breakdown
+● [Sigma] Promotions Sigma
+● [Query]
+
+
+Update Account Details
+Yes
+P0    1.07 p.p
+Q1     ●  [MINT] Phone number, Store Address, Store Name, Business Name, Business Tags, Contact 
+emails
+●  [Salesforce] Decision Maker information
+
+
+Suspected Fraudster Impersonating Mx
+
+Yes
+
+P0    0.16 p.p.
+
+Q1     ●  [MINT] Change History
+● [Sigma] SS COO Dashboard
+● [Slack] #mx-bank-changes
+●  [Sigma] Merchant Portal Employee Detail by Email
+
+
+Update Bank Information
+
+Yes
+
+P0    1.01 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+
+
+Portal or Mobile Login
+
+Yes
+
+P1    0.85 p.p.
+
+Q2     ●  [Sigma] Merchant Portal Employee Detail by Email Address
+
+
+Sign up Questions       No
+
+P1    0.39 p.p.
+
+Q2     ●  [MINT] is Mx active status
+●  [MINT] History shows the Mx has never been active
+●  [MP] Onboarding status found in Activations Tracker
+
+
+Tablet Ordering and Returning
+
+Yes
+
+P1     0.80 p.p.     Q2
+
+●  [DDMX] Tablet Shipping status
+
+
+Change of Ownership
+Yes (proof of sales)
+P1    0.61 p.p.
+Q2     ●  [Sigma] COO Status
+
+Issue Type
+Verification Required
+Priority
+Non DWR p.p.
+Proposed Timeline
+Required Signals
+
+
+Store Status         No
+
+P0    1.59 p.p.
+
+Q1     ●  [MINT] Is Mx active status
+● [MP] Onboarding status
+● [MINT] Permanent deactivation
+● [MINT] Temporary deactivation
+●  [MINT] Is Menu link active + display menu link
+● [MINT] Store hours
+●  [MINT] Is Menu active
+●  [MINT] Special hours closure
+●  [Sigma] Check for duplicate stores
+●  [Sigma] Check market hours
+●  [Sigma] Check delivery radius
+● [THQ] POS failure reason
+●  [THQ] POS canceled orders
+● [Sigma] Pricing inflation
+● [MINT] Business tags
+
+
+Deposit Discrepancies (+ missing payments)
+
+Yes
+
+P0    1.55 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+●  [Payment Portal] Proactive fraud block
+● [Fraud Workstation]
+●  [Payment Portal] Payment Status + Failure Reason
+●  [MP] KYC Stripe Block
+●  [Payment Portal] Duplicate Account IDs
+● [Stripe]
+
+
+Sales and Marketing Request  No
+P0    1.15 p.p.
+Q1     ●  [MP] Campaign Tab
+● [MP] ‘Co-funded’ breakdown
+● [Sigma] Promotions Sigma
+● [Query]
+
+
+Update Account Details
+Yes
+P0    1.07 p.p
+Q1     ●  [MINT] Phone number, Store Address, Store Name, Business Name, Business Tags, Contact 
+emails
+●  [Salesforce] Decision Maker information
+
+
+Suspected Fraudster Impersonating Mx
+
+Yes
+
+P0    0.16 p.p.
+
+Q1     ●  [MINT] Change History
+● [Sigma] SS COO Dashboard
+● [Slack] #mx-bank-changes
+●  [Sigma] Merchant Portal Employee Detail by Email
+
+
+Update Bank Information
+
+Yes
+
+P0    1.01 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+
+
+Portal or Mobile Login
+
+Yes
+
+P1    0.85 p.p.
+
+Q2     ●  [Sigma] Merchant Portal Employee Detail by Email Address
+
+
+Sign up Questions       No
+
+P1    0.39 p.p.
+
+Q2     ●  [MINT] is Mx active status
+●  [MINT] History shows the Mx has never been active
+●  [MP] Onboarding status found in Activations Tracker
+
+
+Tablet Ordering and Returning
+
+Yes
+
+P1     0.80 p.p.     Q2
+
+●  [DDMX] Tablet Shipping status
+
+
+Long Tail (Others)
+P2    6.93 p.p.
+Q2/Q3
+● Long tail
+
+Issue Type
+Verification Required
+Priority
+Non DWR p.p.
+Proposed Timeline
+Required Signals
+
+
+Store Status         No
+
+P0    1.59 p.p.
+
+Q1     ●  [MINT] Is Mx active status
+● [MP] Onboarding status
+● [MINT] Permanent deactivation
+● [MINT] Temporary deactivation
+●  [MINT] Is Menu link active + display menu link
+● [MINT] Store hours
+●  [MINT] Is Menu active
+●  [MINT] Special hours closure
+●  [Sigma] Check for duplicate stores
+●  [Sigma] Check market hours
+●  [Sigma] Check delivery radius
+● [THQ] POS failure reason
+●  [THQ] POS canceled orders
+● [Sigma] Pricing inflation
+● [MINT] Business tags
+
+
+Deposit Discrepancies (+ missing payments)
+
+Yes
+
+P0    1.55 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+●  [Payment Portal] Proactive fraud block
+● [Fraud Workstation]
+●  [Payment Portal] Payment Status + Failure Reason
+●  [MP] KYC Stripe Block
+●  [Payment Portal] Duplicate Account IDs
+● [Stripe]
+
+
+Sales and Marketing Request  No
+P0    1.15 p.p.
+Q1     ●  [MP] Campaign Tab
+● [MP] ‘Co-funded’ breakdown
+● [Sigma] Promotions Sigma
+● [Query]
+
+
+Update Account Details
+Yes
+P0    1.07 p.p
+Q1     ●  [MINT] Phone number, Store Address, Store Name, Business Name, Business Tags, Contact 
+emails
+●  [Salesforce] Decision Maker information
+
+
+Suspected Fraudster Impersonating Mx
+
+Yes
+
+P0    0.16 p.p.
+
+Q1     ●  [MINT] Change History
+● [Sigma] SS COO Dashboard
+● [Slack] #mx-bank-changes
+●  [Sigma] Merchant Portal Employee Detail by Email
+
+
+Update Bank Information
+
+Yes
+
+P0    1.01 p.p.
+
+Q1     ●  [Sigma] Payout Failure reason
+
+
+Portal or Mobile Login
+
+Yes
+
+P1    0.85 p.p.
+
+Q2     ●  [Sigma] Merchant Portal Employee Detail by Email Address
+
+
+Sign up Questions       No
+
+P1    0.39 p.p.
+
+Q2     ●  [MINT] is Mx active status
+●  [MINT] History shows the Mx has never been active
+●  [MP] Onboarding status found in Activations Tracker
+
+
+Tablet Ordering and Returning
+
+Yes
+
+P1     0.80 p.p.     Q2
+
+●  [DDMX] Tablet Shipping status
+
+Total                             -      15.23%      -                  -
+
+
+
+Type
+Success Metrics
+Metric
+
+
+Expected Impact
+
+
+Hypothesis
+
+
+Primary
+AHT
+Decrease
+We expect that by looking at TruthFinder, Teammates will spend less time diagnosing the issue. We 
+will always monitor the time specific to diagnosis by conducting manual deep dives.
+
+
+Secondary
+Reinbounds / Mx MTO
+Decrease
+If merchants get the right resolution the first time around, they will reinbound less.
+
+
+Secondary
+DWR
+Increase
+We expect that ultimately a better diagnosis will lead to higher satisfaction rates, increasing 
+DWR.
+
+Appendix
+
+Appendix 1 - MTO/DWR Impact by Issue Type
+
+
+
+
+Issue Order Status Inquiries Store Status
+Deposit Discrepancies
+Sales and Marketing Requests
+Update Account Details T1/T3/SPOC/MXP
+Update Bank Information Menu Update Request Portal or Mobile Login Tablet Ordering or Returning 
+Cancel Order Request Canceled Order Dispute Error Charge Dispute
+Unresolved Contact: Dropped Privacy Inquiry
+Other
+Change of Ownership Issue with Pickup Item Unavailable
+
+total responses
+1634
+566
+399
+327
+
+518
+350
+439
+229
+385
+793
+1026
+934
+140
+181
+200
+158
+458
+444
+
+dwr yes response
+1232
+330
+169
+157
+
+360
+200
+313
+103
+266
+678
+912
+825
+31
+73
+100
+67
+373
+359
+
+non dwr
+402
+236
+230
+170
+
+158
+150
+126
+126
+119
+115
+114
+109
+109
+108
+100
+91
+85
+85
+
+Issue's DWR
+75.40%
+58.30%
+42.36%
+48.01%
+
+69.50%
+57.14%
+71.30%
+44.98%
+69.09%
+85.50%
+88.89%
+88.33%
+22.14%
+40.33%
+50.00%
+42.41%
+81.44%
+80.86%
+
+% of total non DWR
+9.71%
+5.70%
+5.56%
+4.11%
+
+3.82%
+3.62%
+3.04%
+3.04%
+2.87%
+2.78%
+2.75%
+2.63%
+2.63%
+2.61%
+2.42%
+2.20%
+2.05%
+2.05%
+pp of non DWR (out of 27.93%)
+2.71%
+1.59%
+1.55%
+1.15%
+
+1.07%
+1.01%
+0.85%
+0.85%
+0.80%
+0.78%
+0.77%
+0.74%
+0.74%
+0.73%
+0.67%
+0.61%
+0.57%
+0.57%
+
+
+MTO bps
+6.3
+1.2
+0.4
+0.4
+
+0.8
+0.2
+0.5
+0.2
+0.4
+2.9
+1.7
+1.7
+0.3
+0.5
+0.7
+0.2
+1.9
+1.9
+
+Feedback                    130     52    78   40.00%   1.88%    0.53%       0.4
+Full list:
+ 
+https://docs.google.com/spreadsheets/d/1zZE5ZgFTTmLSYyQMCygcj-14layVGZEbpFRfB9kEE7E/edit?gid=3311700
+01#gid=331170001
+
+
+Appendix 2 - Required Steps by Issue Type
+
+Onboarding
+Issue type: Sign Up Questions
+
+
+Activity
+
+Where is the data located?
+
+What the tool will help Tx do:
+
+What this accomplishes (MXP/MSS)
+
+What this accomplishes (T1/SPOC)
+
+Instructions on where to locate the data
+
+
+Is the Merchant Active, and done with onboarding?
+
+MINT
+
+Check if the Mx is done with onboarding
+
+If Mx is active and has no history of permanent deactivations, Mx is done with onboarding
+
+If Mx is active and has no history of permanent deactivations, Mx is done with onboarding
+
+1.  MINT > Store Information > Is Active Example:
+
+
+
+Example: Change History, no perm deact
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+If the Mx is not done with onboarding, validate what stage they are in
+Merchant Portal > Activations tracker
+Quickly identify where the Mx is at in onboarding
+-provide a seamless experience + complete onboarding faster
+
+-reduce transfers to Activations
+-provide a seamless experience + complete onboarding faster
+
+-reduce transfers to Activations
+1.  Merchant Portal > Activations tracker
+
+(example of a tablet Mx) https://www.doordash.com/merchant/summary?store_id=33097125
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(example of POS Mx)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Store Status | Not Receiving Orders Issue type: Store Status
+
+
+Activity      Where is the data located?
+What the tool will help Tx do:
+What this accomplishes
+What this accomplishes
+Instructions on where to locate the data
+
+(MXP/MSS)    (T1/SPOC)
+
+
+Is Merchant Active?
+
+MINT
+
+Check if the Mx is done with onboarding
+
+If Mx is active and has no history of permanent deactivations, Mx is done with onboarding
+
+If Mx is active and has no history of permanent deactivations, Mx is done with onboarding
+
+1.  MINT > Store Information > Is Active
+
+Example:
+https://admin-gateway.doordash.com/mx-tools/store/37282 8
+
+
+
+
+Permanent Deactivation
+MINT THQ
+Portal
+Detect a permanent deactivation
+-Reactivate the Mx
+-Communicate if the decision remains final and Mx cannot deactivate (e.g., fraud)
+-Escalate to MXP
+-Communicate if the decision remains final and Mx cannot deactivate (e.g., fraud)
+1.  MINT > Deactivations > Permanent Deactivations
+
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OR
+
+
+1.  THQ > Store Page > Merchant Information > Deactivations > Permanent Deactivations
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Temporary Deactivation
+MINT THQ
+Portal
+Detect a temporary deactivation
+-Reactivate the Mx
+-Reactivate the Mx
+1.  MINT > Deactivations > Temporary Deactivation Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OR
+
+
+1.  THQ > Store Page > Merchant Information > Deactivations > Temporary Deactivations
+
+Example:
+
+Confirm if menu link is active
+MINT
+Surface the menu link
+Confirm the menu link is active, and appears on DD.com
+Confirm the menu link is active, and appears on DD.com
+1.  MINT > Store Information > Helpful Links > Menu Editor Links
+
+
+Example:
+
+
+
+
+
+
+Store Hours
+MINT THQ
+Surface store hours
+Confirm the store hours are correct and update as needed
+Confirm the store hours are correct and update as needed
+1.  MINT > Store Information > Helpful Links > Menu Editor Links >
+Click on the relevant ID under Store Menu Link
+a.  Note: The menu to update should have checkmarks under Is Menu Active and Store Menu Link is 
+Active.
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:
+
+
+OR
+
+1.  THQ > Store Page > Merchant Information > Opening Hours Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Check Special Closures
+MINT THQ
+Detect if special hours were placed
+Confirm with the Mx if we need to delete the special hours
+Confirm with the Mx if we need to delete the special hours
+1.  MINT > Store Information > Helpful Links > Special Store Hours > Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OR
+
+1.  THQ > Store Page > Merchant Information > Upcoming Special Hours
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Duplicate Store
+SFDC
+Confirm if a duplicate store was created
+Disable the duplicate store
+Flag the duplicate store to MXP to deactivate accordingly
+1.  Open the Sigma
+
+
+Check Market Hours
+
+Sigma
+
+Check sigma to see what hours the merchant’s market is set to
+
+Confirm if the market hours match the hours set by the Mx
+
+Confirm if the market hours match the hours set by the Mx
+
+1.  Open the Sigma
+2.  Input the Submarket and Region Name
+3.  Show the Start Time + End Time
+a.  Note: 0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, and 6 = 
+Saturday
+
+
+
+
+
+
+
+
+
+
+
+
+
+POS Failure Reasons
+THQ
+Detect a POS Placement Failure on recent orders
+Create a POS Support Case
+Create a POS Support Case
+1.  Go to THQ > Timeline > Expand Timeline > Locate the event timeline "Point of Sale Placement 
+Failure”
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Identify Fallback Protocol
+THQ
+Detect the fallback order protocol
+Inform Mx the order was sent to the appropriate fallback order protocol
+Inform Mx the     1.
+order was sent to the appropriate fallback order protocol
+
+POS Canceled Orders
+THQ
+Detect how orders were canceled
+
+-Cancel by Merchant
+-Cancel by Dasher
+-Cancel by Customer
+-Cancel by Merchant → if no orders were canceled → create POS case
+
+-Cancel by Dasher
+→ identify if Dx reported their store as closed → offer to reactivate
+
+-Cancel by Customer → inform Mx that Cx decided to cancel
+→ create a POS support case if the issue still persists
+1.  Go to THQ > Timeline > Expand Timeline > Locate the event timeline “Cancel by Dasher” or 
+“Cancel by Customer” or “Cancel by Merchant”
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Store Status | Not appearing on DD.com Issue Type: Store Status
+
+
+Activity
+Where is the data located?
+What the tool will help Tx do:
+What this accomplishes (MXP/MSS)
+What this accomplishes (T1/SPOC)
+Instructions on where to locate the data
+
+
+Business tags
+
+MINT > Business Page
+
+Surface business tags and prioritization
+
+Review with Mx to ensure that business tags are present / ranked correctly
+
+1.  MINT > Business Page > Business Tag Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Delivery radius
+MINT
+Sigma
+Check Mx delivery radius (e.g., Cx might be outside of the delivery radius which is why Mx is not 
+appearing)
+
+Use this Sigma to determine what the maximum delivery radius can be set at
+If the number matches with what’s on the Sigma inform the Mx we cannot extend further without a 
+commission change
+Escalate to MXP
+1.  MINT > Store Settings > Delivery Radius Example:
+
+
+
+
+
+
+OR
+
+1.  Open  Sigma
+2. Enter the Store ID
+
+
+
+
+
+
+Pricing Inflation
+Sigma
+Identify if store isn’t appearing due to pricing inflation
+Communicate to Mx next steps / how to fix
+Communicate to Mx next steps / how to fix
+1.  Open the Sigma
+2. Input Store ID
+3.  Show the reason under ‘Pricing Visibility’
+a.  Visibility issues NOT likely due to pricing
+b.  Visibility issues MAY due to pricing
+
+
+
+
+
+
+
+
+Permanent Deactivation
+MINT THQ
+Mx is permanently deactivated and will not show up on DD.com
+Communicate the status and reactivate if we can
+SPOC - reactivate Mx (if we allow reactivation)
+
+T1 - escalate to MXP
+1.  MINT > Deactivations > Permanent Deactivations
+
+
+Example:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OR
+
+
+1.  THQ > Store Page > Merchant Information > Deactivations > Permanent Deactivations
+
+Example:
+
+MIssing Payments
+Issue Type: Deposit Discrepancies + Bank Account Update
+
+
+Activity
+
+Where is the data located?
+
+What the tool will help Tx do:
+
+What this accomplishes (MXP/MSS)
+
+What this accomplishes (T1/SPOC)
+
+Instructions on where to locate the data
+
+
+Identify if the Mx has been paid
+
+Payments Portal Dashboard
+
+Confirm if payments were deposited or in transit
+
+Inform Mx the payments were deposited or in transit
+
+Inform Mx the payments were deposited or in transit
+
+1.  Open the Payments Dashboard
+2.  Identify the status of the payment
+a. In_transit
+b. Paid
+
+
+3.
+
+
+Identify the failed payout reason error
+
+Payout Failure Reason Dashboard
+
+Understand the reason of the failed payout, and provide next steps
+
+Diagnose + provide the correct next steps on how to unblock the Mx
+
+Provide correct instructions to the Mx before escalating to MXP
+
+1.  Open the Sigma
+2. Input the Store ID
+3.  Show the Payout Failure Reason
+
+
+Proactive fraud block identification
+Orange ATO banner in SFDC
+
+
+
+
+
+
+Failed Payment Dashboard
+
+Payout Failure Reason = doordash_fraud - confirm if we can use this signal instead of the orange 
+banner
+
+
+Endpoints that fraud exposes if Mx is on block list
+> real-time
+
+https://unity.door dash.com/suites/ teammate/works tation/lists/-1
+
+Mx ATO
+Proactive Outreach
+
+Blocks based on bank finger print
+Fraud ENG: Tina Gu - provide exact
+Confirm a proactive fraud block was placed
+Ask Mx for the photo iD (front/back)
+
+Escalate to a SME to remove fraud block
+Ask Mx for the photo iD (front/back)
+
+Escalate to MXP
+
+API for ENG to call
+
+
+KYC Stripe Block
+
+Merchant Portal (example)
+
+
+
+
+
+
+
+
+Failed Payment Dashboard
+
+Payout Failure Reason = KYC
+
+Detect if the Mx needs to update legal information and provide the link
+
+Direct Mx to update in Stripe
+
+OR
+
+Update info on behalf of the Mx so we can resend payments ASAP
+
+Escalate to MXP
+
+1.  Open the Sigma
+2. Input the Store ID
+3.  Show the Payout Failure Reason = KYC
+
+
+
+
+Bank Account Failed payments
+Failed Payment Dashboard
+
+Payout Failure Reason = bank_account
+
+1a.Error code(s): account_closed, could_not_process
+, or if no error code is given
+
+
+1b.Error code(s): No_account or invalid_account_n umber, no_external_accou nt_in_currency, 
+invalid_currency, bank_ownership_c hanged, incorrect_account
+_holder_name
+
+1c. Error code(s):
+Insufficient_funds
+
+
+1d. Error code(s): debit_not_authoriz ed, account_frozen
+Detect why the Mx is having trouble updating their bank account which causes a failed pament
+
+
+
+
+
+
+
+
+1a. Inform Mx they need to re-enter their bank account
+
+
+
+1b. Collect ESV if Mx won’t update the account themselves. After verifying, MXP updates bank 
+account
+
+
+
+
+
+1c. MXP retries failed payout
+
+
+
+1d. Mx to contact bank about accepting debits
+
+
+
+
+
+
+
+
+1a. Inform Mx they need to re-enter their bank account
+
+
+
+1b. Send verification form to Mx, put case in pending, escalate to MXP
+
+
+
+
+
+
+
+1c. Escalate to MXP
+
+
+
+1d. Escalate to MXP
+1.  Open the Sigma
+2. Input the Store ID
+3.  Show the Payout Failure Reason = bank_account
+
+
+Payment Account ID
+
+Mode Report
+
+Detect if there are two Payment Account IDs associated to the store
+
+Ensure we locate all missing payments associated to the store
+
+A new payment
+
+Escalate to MXP
+
+1.  Open the Mode Report
+2. Input the Store ID
+3.  Show the Payment Account IDs associated w/ the store
+
+account ID can be created if a fraud SS COO occurred
+
+
+Stripe fraud (Liens and Holds)
+
+Failed Payment Dashboard > stripe_fraud
+
+Detect if the Mx is blocked due to stripe fraud
+
+Reach out to stripe support to ask why the Mx is blocked for fraud
+
+Stripe Risk Review
+
+Escalate to MXP
+
+1.  Open the  Sigma
+2. Input the Store ID
+3.  Show the Payout Failure Reason = stripe_fraud
+
+
+DoorDash fraud
+
+Failed Payment Dashboard > doordash_fraud
+
+Response returned when store is on the  list
+
+Detect if the Mx is blocked from receiving payments due to a fraud block
+
+Escalate to MXP
+
+1.  Open the  Sigma
+2. Input the Store ID
+3.  Show the Payout Failure Reason = doordash_fraud
+
+
+CP2100
+
+Mx not provided W9 or 147C
+
+Failed Payment Dashboard > CP2100
+
+Detect if the Mx is blocked due to CP2100
+
+Direct MXP to the KB
+
+Escalate to MXP
+
+1.  Open the  Sigma
+2. Input the Store ID
+3.  Show the Payout Failure Reason = CP2100
+
+
+
+ATO (detect if an ATO may have occurred or is occurring) Issue Type: Fraudster impersonating of Mx
+
+Activity
+Where is the data located?
+What the tool will help Tx do:
+What this accomplishes (MXP/MSS)
+What this accomplishes (T1/SPOC)
+Instructions on where to locate the data
+
+
+Confirm if store information was updated in the MP
+
+MINT
+
+Confirm if information was updated in the Merchant Portal
+
+Help detect if an ATO is occurring or has occurred
+
+Ask for a voided check + photo ID
+
+Help detect if an ATO is occurring or has occurred
+
+Ask for a voided check + photo ID
+
+Escalate to MXP
+
+1.  MINT > Change History
+
+Example:
+
+
+
+Fraud SSCOO identification
+Sigma
+Confirm a fraud SSCOO took place
+Confirm a fraud SSCOO took place and this is a true ATO
+
+Escalate to Fraud
+Confirm a fraud SSCOO took place and this is a true ATO
+
+Escalate to MXP
+1.  Open the Sigma
+2. Input Store ID
+3. Owner Details
+4. Show the information:
+a. New_owner_name
+b. New_owner_email
+c. New_owner_phone
+
+
+Proactive fraud block identification
+
+Fraud Workstation
+→ will surface blocks in real time
+
+Confirm a proactive fraud block was not placed
+
+Confirms DD did not catch this as part of the proactive fraud block process and this is a true ATO
+
+Confirms DD did not catch this as part of the proactive fraud block process and this is a true ATO
+
+
+Bank Account Update
+
+#mx-bank-chang es
+
+Confirm if an unauthorized bank
+
+P0 trigger to ask Mx for:
+
+ESV + confirm last 4 of proper bank in
+
+1.  Go to #mx-bank-changes
+
+
+
+Stripe > change information lives there > ETL
+
+Need API
+account was added
+
+-ESV
+-Confirm last 4 of proper bank in case notes
+
+Required:
+-Add default banking to Stripe
+-Do not delete the fraud bank account
+
+Escalate to Fraud
+case notes → leave case in open → escalate to MXP
+
+
+
+
+
+
+
+
+
+2.
+
+
+Portal Users
+
+Sigma
+
+Confirm if new users have been added to the MP
+
+Remove unauthorized users from the bank and add back the Mx
+
+Escalate to MXP
+
+
+
+COO
+Issue: Change of Ownership
+
+
+Activity
+
+Where is the data located?
+
+What the tool will help Tx do:
+
+What this accomplishes (MXP/MSS)
+
+What this accomplishes (T1/SPOC)
+
+Instructions on where to locate the data
+
+
+COO Status
+
+COO Dashboard
+
+Detect SS COO status
+
+Communicate to the Mx where we’re at in the process / what is needed
+
+If no response from old owner, send a trigger to MXP/MSS to kick off the traditional process
+
+Communicate status to Mx and escalate to COO queue
+
+
+
+Tablet
+
+
+Activity
+Where is the data located?
+What the tool will help Tx do:
+What this accomplishes (MXP/MSS)
+What this accomplishes (T1/SPOC)
+Instructions on where to locate the data
+
+
+Tablet is paused from receiving orders
+
+MINT >
+deactivation
+
+Understand if the Mx was deactivated due to tablet heartbeat, or any other tablet specific 
+deactivation reasons
+
+Provide instructions to Mx on how to reactivate their store, and education to prevent future 
+deactivation
+
+Provide instructions to Mx on how to reactivate their store, and education to prevent future 
+deactivation
+
+
+Tablet Shipping Status
+
+DDMx
+
+Easily identify the shipping status of the equipment
+
+Provide the status to Mx, as well as the tracking
+
+Provide the status to Mx, as well as the tracking
+
+(e.g., in transit, delivered, delayed etc)
+number
+number
+
+
+Tablet specific error messages that will block the Mx from logging in
+
+MINT > View Tablet Merchant Profile
+
+Provide the correct tablet credentials to Tx to validate if the ones being used by MX are correct.
+
+Confirm that login credentials are correct, and update them in case needed.
+
+Confirm that login credentials are correct.
+
+
+
+POS
+POS - Troubleshooting
+
+
+Activity
+Where is the data located?
+What the tool will help Tx do:
+What this accomplishes (MXP/MSS)
+What this accomplishes (T1/SPOC)
+
+
+POS Troubleshooting Diagnosis
+
+ T1 POS
+ Troubleshooting
+ Dashboard
+
+Diagnose item out of stock, menu issues, request to update store hours, temp deactivation request, 
+temp deactivations, and reactivate request if Mx is permanently deactivated
+
+Provide the right instructions based on POS provider
+
+Provide the right instructions based on POS provider
+
+
+
+Sales and Marketing Requests
+
+
+Activity
+
+Where is the data located?
+
+What the tool will help Tx do:
+
+What this accomplishes (MXP/MSS)
+
+What this accomplishes (T1/SPOC)
+
+Instructions on where to locate the data
+
+
+Identify what promotions the Mx is enrolled in
+
+Merchant Portal > Campaign tab
+
+
+
+
+
+
+
+
+
+ Merchant
+ Promotions Sigma
+-this sigma contains a ‘description’ of the promotion - we will need to add to the tool
+
+ Query - can use to filter by store
+
+Validate:
+
+-what promotions the Mx is enrolled in
+-when the promotion ends
+-a description of the promotion
+
+Provide the correct information / education based on promotion type
+
+Provide the correct information / education based on promotion type
+
+
+Identify if the
+
+Merchant Portal >
+
+New badges
+
+Allows Tx to
+
+Allows Tx to
+
+tion is DD or
+Campaign Tab
+added next to the
+quickly identify
+quickly identify
+
+ded
+
+New ‘co-funded’ breakdown - launching in April
+campaign to denote if it is ‘DoorDash’ funded or ‘Co-funded’
+which campaigns are being funded by DD or
+co-funded
+
+Creates a “Better Together” narrative and highlights our partnership with the Mx even further.
+which campaigns are being funded by DD or
+co-funded
+
+Creates a “Better Together” narrative and highlights our partnership with the Mx even further.

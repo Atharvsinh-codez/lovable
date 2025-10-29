@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, KeyboardEvent, useEffect, useRef } from "react";
+import { Paperclip } from "lucide-react";
 
 interface HeroInputProps {
   value: string;
@@ -9,6 +10,7 @@ interface HeroInputProps {
   placeholder?: string;
   className?: string;
   showSearchFeatures?: boolean;
+  onFileUpload?: () => void;
 }
 
 function isURL(str: string): boolean {
@@ -23,7 +25,8 @@ export default function HeroInput({
   onSubmit, 
   placeholder = "Describe what you want to build...",
   className = "",
-  showSearchFeatures = true
+  showSearchFeatures = true,
+  onFileUpload
 }: HeroInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [showTiles, setShowTiles] = useState(false);
@@ -131,7 +134,22 @@ export default function HeroInput({
           />
         </label>
 
-        <div className="p-10 flex justify-end items-center relative">
+        <div className="p-10 flex justify-between items-center relative">
+          {/* Paperclip button for file upload */}
+          {onFileUpload && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onFileUpload();
+              }}
+              type="button"
+              className="p-8 rounded-10 hover:bg-black-alpha-4 transition-colors flex items-center justify-center"
+              title="Attach file"
+            >
+              <Paperclip className="w-18 h-18 text-black-alpha-48" />
+            </button>
+          )}
+          
           <button
             onClick={onSubmit}
             disabled={!value.trim()}
