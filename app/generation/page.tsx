@@ -558,17 +558,35 @@ function AISandboxPage() {
   };
 
   const handleSuggestionClick = (artifactType: string) => {
-    // Placeholder for artifact generation
-    // Full implementation will be added in the next task
-    console.log('[handleSuggestionClick] Artifact type:', artifactType);
+    // Build contextual prompt with uploaded research data
+    const fileNames = conversationContext.uploadedFiles?.map(f => f.filename).join(', ') || 'uploaded files';
+    const fileCount = conversationContext.uploadedFiles?.length || 0;
     
-    addChatMessage(
-      `Generating ${artifactType}... (Full artifact generation coming soon!)`,
-      'system'
-    );
+    // Get analysis themes and insights for context
+    const themes = conversationContext.analysisResults?.themes || [];
+    const hasThemes = themes.length > 0;
     
-    // TODO: Wire up to actual artifact generation API
-    // This will be implemented in the next task
+    // Create a natural, conversational prompt that references the research data
+    let prompt = `Generate a ${artifactType} based on the research data I uploaded`;
+    
+    if (fileCount > 0) {
+      prompt += ` (${fileNames})`;
+    }
+    
+    prompt += `. Use the insights and themes from the analysis to create a detailed, evidence-based artifact.`;
+    
+    // Add theme context if available
+    if (hasThemes) {
+      prompt += ` Key themes include: ${themes.slice(0, 3).join(', ')}.`;
+    }
+    
+    // Set the input and trigger the message
+    setAiChatInput(prompt);
+    
+    // Use setTimeout to ensure state is updated before sending
+    setTimeout(() => {
+      sendChatMessage();
+    }, 0);
   };
   
   const checkAndInstallPackages = async () => {
