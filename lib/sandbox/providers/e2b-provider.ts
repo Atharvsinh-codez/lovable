@@ -12,7 +12,6 @@ export class E2BProvider extends SandboxProvider {
   async reconnect(sandboxId: string): Promise<boolean> {
     try {
       // E2B SDK doesn't support direct reconnection yet
-      // Future implementation could cache sandbox IDs
       return false;
     } catch (error) {
       console.error(`[E2BProvider] Failed to reconnect to sandbox ${sandboxId}:`, error);
@@ -334,7 +333,7 @@ with open('package.json', 'w') as f:
     json.dump(package_json, f, indent=2)
 print('✓ package.json')
 
-# Vite config
+# Vite config - CRITICAL: Allow all E2B hosts
 vite_config = """import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -344,9 +343,28 @@ export default defineConfig({
     host: '0.0.0.0',
     port: ${VITE_PORT},
     strictPort: true,
+    allowedHosts: [
+      '.e2b.dev',
+      '.e2b.app', 
+      '.vercel.app',
+      '.vercel.run',
+      'localhost',
+      '127.0.0.1'
+    ],
     hmr: {
-      clientPort: ${VITE_PORT}
+      protocol: 'wss',
+      clientPort: ${VITE_PORT},
+      host: undefined
+    },
+    cors: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
     }
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: ${VITE_PORT},
+    strictPort: true
   }
 })"""
 
