@@ -41,6 +41,7 @@ export abstract class SandboxProvider {
     this.config = config;
   }
 
+  // Core abstract methods that all providers must implement
   abstract createSandbox(): Promise<SandboxInfo>;
   abstract runCommand(command: string): Promise<CommandResult>;
   abstract writeFile(path: string, content: string): Promise<void>;
@@ -52,14 +53,15 @@ export abstract class SandboxProvider {
   abstract terminate(): Promise<void>;
   abstract isAlive(): boolean;
   
-  // Optional methods that providers can override
+  // Optional methods with default implementations
+  // Providers should override these for full functionality
   async setupViteApp(): Promise<void> {
-    // Default implementation for setting up a Vite React app
-    throw new Error('setupViteApp not implemented for this provider');
+    console.warn(`[${this.constructor.name}] setupViteApp not implemented`);
+    throw new Error(`setupViteApp not implemented for ${this.constructor.name}`);
   }
   
   async restartViteServer(): Promise<void> {
-    // Default implementation for restarting Vite
-    throw new Error('restartViteServer not implemented for this provider');
+    console.warn(`[${this.constructor.name}] restartViteServer not implemented`);
+    throw new Error(`restartViteServer not implemented for ${this.constructor.name}`);
   }
 }
